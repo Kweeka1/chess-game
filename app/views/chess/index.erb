@@ -1,0 +1,46 @@
+<div class="chess">
+  <div id="board_container">
+    <% @board.each_with_index do |row, row_index| %>
+      <div id="chess_row" class="">
+        <% if (row_index % 2) == 0 %>
+          <% row.each_with_index do |col, col_index| %>
+            <% if col.instance_of? Hash %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[:piece].split("_")[0] %>" team="<%= col[:team] %>" class="cube_even cube">
+                <%= image_tag "#{col[:piece]}.png", width: '50px', alt: "#{col[:piece]}" %>
+              </div>
+            <% else %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_even cube"><%= col %></div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <% row.each_with_index do |col, col_index| %>
+            <% if col.instance_of? Hash %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[:piece].split("_")[0] %>" team="<%= col[:team] %>" class="cube_odd cube">
+                <%= image_tag "#{col[:piece]}.png", width: '50px', alt: "#{col[:piece]}" %>
+              </div>
+            <% else %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_odd cube"><%= col %></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="chat_container">
+    <div class="chat__field">
+      <div class="chat__title">
+        <h5>Chat - Room 4585</h5>
+      </div>
+      <div id="chat-display" class="chat__display">
+
+      </div>
+      <div class="chat__input__container">
+        <input type="text" id="chat_input" class="chess__chat__input">
+        <button id="btn_send" class="chat__send">send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'chess', defer: true %>
+<%= javascript_include_tag 'chess_chat', defer: true %>
