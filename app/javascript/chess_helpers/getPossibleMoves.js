@@ -27,14 +27,12 @@ function getKnightMoves(startingPosition, territories, turn) {
 
     for (let i = 0; i < allMoves.length; i += 2) {
         const territory = territories[(allMoves[i] * 8) + allMoves[i + 1]]
-        if (territory !== undefined && territory?.getAttribute("team") !== turn) {
-            if (territory.getAttribute("team") !== "Red") {
-                territory.appendChild(createCircle())
-                possibleMoves.push((allMoves[i] * 8) + allMoves[i + 1])
-            } else {
-                territory.classList.add("enemy")
-                possibleMoves.push((allMoves[i] * 8) + allMoves[i + 1])
-            }
+        if (territory !== undefined && territory?.getAttribute("team") === "") {
+            territory.appendChild(createCircle())
+            possibleMoves.push((allMoves[i] * 8) + allMoves[i + 1])
+        } else if (territory !== undefined && territory?.getAttribute("team") !== turn) {
+            territory?.classList?.add("enemy")
+            possibleMoves.push((allMoves[i] * 8) + allMoves[i + 1])
         }
     }
 }

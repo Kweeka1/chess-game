@@ -8,7 +8,7 @@ const types = {
     command: "TEXT_COMMAND"
 }
 
-function checkType(text = "") {
+function checkType(text ) {
     return text.at(0) === "!" ? types.command : types.msg
 }
 

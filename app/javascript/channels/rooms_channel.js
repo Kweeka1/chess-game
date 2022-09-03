@@ -15,18 +15,16 @@ function displayMessage(message) {
 
 let pieceMoveState = {}
 
-function moveValidationResult(pieceMoveState, data) {
-  const start = pieceMoveState.start === data.move.start.join(":")
-  const end = pieceMoveState.end === data.move.end.join(":")
-
-  if (data.move.isValid && start && end) {
-    movePieceToNewPos(pieceMoveState.currentPieceEl, pieceMoveState.team, pieceMoveState.lastPieceEl, pieceMoveState.isValid)
+function moveValidationResult(data) {
+  if (data.isValid) {
+    movePieceToNewPos(data.start, data.end, true)
+    return;
   }
 
-  movePieceToNewPos(pieceMoveState.currentPieceEl, pieceMoveState.team, pieceMoveState.lastPieceEl, false)
+  movePieceToNewPos(data.start, data.end, false)
 }
 
-export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelected, currentPieceTeam, turn) {
+export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelected, currentPieceTeam, turn, map) {
   const start = lastPieceSelected.getAttribute("coordination")
   const end = currentPieceSelected.getAttribute("coordination")
 
@@ -37,7 +35,8 @@ export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelecte
       starting_position: start,
       ending_position: end,
       occupier: currentPieceTeam,
-      turn: turn
+      turn: turn,
+      map: map
     }
   })
 
@@ -49,8 +48,9 @@ export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelecte
   pieceMoveState["end"] = end
 }
 
+const id = window.location.pathname.split("/").at(-1)
 
-export const roomChannel = consumer.subscriptions.create("RoomsChannel", {
+export const roomChannel = consumer.subscriptions.create({channel: "RoomsChannel", room: id}, {
   connected() {
     // Called when the subscription is ready for use on the server
     console.log("Connected")
@@ -68,7 +68,7 @@ export const roomChannel = consumer.subscriptions.create("RoomsChannel", {
         displayMessage(data["data"])
         break;
       case serverTypes.moveValidation:
-        moveValidationResult(pieceMoveState, data)
+        moveValidationResult(data["move"])
         break;
     }
   }
