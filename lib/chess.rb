@@ -1,4 +1,6 @@
 class Chess
+  Empty = {piece: '', team: ''}
+
   Blue_Rock = { "piece": 'Rock_black', team: 'Blue' }.freeze
   Blue_Knight = { "piece": 'Knight_black', team: 'Blue' }.freeze
   Blue_Bishop = { "piece": 'Bishop_black', team: 'Blue' }.freeze
@@ -20,7 +22,7 @@ class Chess
   Red_Frontline = Array.new 8, Red_Pawn
 
   def initialize
-    @board = Array.new(8, Array.new(8, '  '))
+    @board = Array.new(8, Array.new(8, Empty))
     @board[0] = Blue_Backline
     @board[1] = Blue_Frontline
     @board[6] = Red_Frontline

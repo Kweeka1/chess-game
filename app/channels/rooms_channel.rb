@@ -81,8 +81,9 @@ class RoomsChannel < ApplicationCable::Channel
       temp = @board[piece_end[0].to_i][piece_end[1].to_i]
       @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
       @board[piece_start[0].to_i][piece_start[1].to_i] = temp
+      puts @board[piece_end[0].to_i][piece_end[1].to_i]
       puts @board[piece_start[0].to_i][piece_start[1].to_i]
-
+      puts Marshal.dump(@board)
       true
     end
   end
@@ -134,18 +135,33 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def validate_rock_move(piece_start, piece_end, territories)
+    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
+    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
+    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
     true
   end
 
   def validate_king_move(piece_start, piece_end, territories)
+    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
+    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
+    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
     true
   end
 
   def validate_pawn_move(piece_start, piece_end, occupier, turn)
+    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
+    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
+    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
     true
   end
 
   def validate_queen_move(piece_start, piece_end)
+    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
+    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
+    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
+    puts @board
+    puts piece_end[0].to_i, piece_end[1].to_i
+    puts piece_start[0].to_i, piece_start[1].to_i
     true
   end
 
