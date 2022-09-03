@@ -4,6 +4,6 @@
 import { createConsumer } from "@rails/actioncable"
 
 const id = window.location.pathname.split("/").at(-1)
-console.log(id)
-export default createConsumer(`ws://127.0.0.1:3000/cable?board=${id}`)
+
+export default createConsumer(`ws://192.168.1.15:3000/cable?board=${id}`)
 //export default createConsumer()

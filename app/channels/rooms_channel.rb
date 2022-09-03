@@ -2,14 +2,15 @@ class RoomsChannel < ApplicationCable::Channel
   require 'chess'
   require 'chess_in_mem_cache'
 
+  $cache = ChessInMemCache.instance
+
   @@types = {
     msg: "TEXT_MESSAGE",
     command: "TEXT_COMMAND",
     piece_move: "MOVE_VALIDATION"
   }
   def subscribed
-    cache = ChessInMemCache.instance
-    @board = cache.get_chess_board(params[:room])
+    @board = $cache.get_chess_board(params[:room])
     stream_from "rooms_#{params[:room]}"
   end
 
@@ -31,8 +32,6 @@ class RoomsChannel < ApplicationCable::Channel
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
-    cache = ChessInMemCache.instance
-    cache.store_chess_board(params[:room], @board)
   end
 
   private
@@ -76,14 +75,12 @@ class RoomsChannel < ApplicationCable::Channel
   def validate_knight_move(piece_start, piece_end)
     row_move = (piece_start[0].to_i - piece_end[0].to_i).abs
     col_move = (piece_start[1].to_i - piece_end[1].to_i).abs
-    puts 'knight validation'
+
     if row_move + col_move === 3
       temp = @board[piece_end[0].to_i][piece_end[1].to_i]
       @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
       @board[piece_start[0].to_i][piece_start[1].to_i] = temp
-      puts @board[piece_end[0].to_i][piece_end[1].to_i]
-      puts @board[piece_start[0].to_i][piece_start[1].to_i]
-      puts Marshal.dump(@board)
+      $cache.store_chess_board(params[:room], @board)
       true
     end
   end

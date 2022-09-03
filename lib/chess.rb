@@ -22,7 +22,7 @@ class Chess
   Red_Frontline = Array.new 8, Red_Pawn
 
   def initialize
-    @board = Array.new(8, Array.new(8, Empty))
+    @board = Array.new(8) { Array.new(8, Empty) }
     @board[0] = Blue_Backline
     @board[1] = Blue_Frontline
     @board[6] = Red_Frontline
