@@ -24,7 +24,7 @@ function moveValidationResult(data) {
   movePieceToNewPos(data.start, data.end, false)
 }
 
-export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelected, currentPieceTeam, turn, map) {
+export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelected, currentPieceTeam, turn) {
   const start = lastPieceSelected.getAttribute("coordination")
   const end = currentPieceSelected.getAttribute("coordination")
 
@@ -35,8 +35,7 @@ export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelecte
       starting_position: start,
       ending_position: end,
       occupier: currentPieceTeam,
-      turn: turn,
-      map: map
+      turn: turn
     }
   })
 

@@ -4,9 +4,6 @@ import {validateMoveSv} from "./channels/rooms_channel";
 const board = document.querySelector("#board_container")
 const territories = document.querySelectorAll(".cube")
 
-let map = []
-territories.forEach((key, _) => map.push(key.getAttribute("team")))
-
 let turn = "Blue"
 
 const blueQueenSpace = []
@@ -73,7 +70,7 @@ board.addEventListener("mousedown", function (ev) {
     // Move selected piece to an empty territory or enemy territory. Condition fails if selected piece is an ally
     if (source !== targetPiece && source !== null && targetPieceTeam !== turn) {
         clearPossibleMoves(territories, turn)
-        validateMoveSv(sourcePieceType, source, targetPiece, targetPieceTeam, turn, map)
+        validateMoveSv(sourcePieceType, source, targetPiece, targetPieceTeam, turn)
         return;
     }
 

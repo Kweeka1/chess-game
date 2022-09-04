@@ -3,6 +3,7 @@ class RoomsChannel < ApplicationCable::Channel
   require 'chess_in_mem_cache'
 
   $cache = ChessInMemCache.instance
+  @turn = "Blue"
 
   @@types = {
     msg: "TEXT_MESSAGE",
@@ -57,8 +58,7 @@ class RoomsChannel < ApplicationCable::Channel
                            move["starting_position"],
                            move["ending_position"],
                            move["occupier"],
-                           move["turn"],
-                           move["map"])
+                           move["turn"])
 
     response = {
       message_type: "MOVE_VALIDATION_RECEIVED",
@@ -70,79 +70,147 @@ class RoomsChannel < ApplicationCable::Channel
     }
 
     ActionCable.server.broadcast "rooms_#{params[:room]}", response
-    end
+  end
 
-  def validate_knight_move(piece_start, piece_end)
-    row_move = (piece_start[0].to_i - piece_end[0].to_i).abs
-    col_move = (piece_start[1].to_i - piece_end[1].to_i).abs
+  def move_piece(source_row, source_col, destination_row, destination_col)
+    @board[destination_row][destination_col][:piece] = @board[source_row][source_col][:piece]
+    @board[destination_row][destination_col][:team] = @board[source_row][source_col][:team]
+
+    @board[source_row][source_col][:piece] = ''
+    @board[source_row][source_col][:team] = ''
+    true
+  end
+
+  def validate_knight_move(source, destination)
+    row_move = (source[0].to_i - destination[0].to_i).abs
+    col_move = (source[1].to_i - destination[1].to_i).abs
 
     if row_move + col_move === 3
-      temp = @board[piece_end[0].to_i][piece_end[1].to_i]
-      @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
-      @board[piece_start[0].to_i][piece_start[1].to_i] = temp
-      $cache.store_chess_board(params[:room], @board)
-      true
+      move_piece(source[0].to_i, source[0].to_i, destination[0].to_i, destination[1].to_i)
     end
   end
 
-  def bishop_move(map, start_col, end_col, index)
-    if end_col > start_col
-      @col += 1
-      if map[(index * 8) + @col] != ""
-        return true
+  def validate_bishop_move(source, destination)
+    row_move = (source[0].to_i - destination[0].to_i).abs
+    col_move = (source[1].to_i - destination[1].to_i).abs
+
+    source_row = source[0].to_i
+    source_col = source[1].to_i
+
+    destination_row = destination[0].to_i
+    destination_col = destination[1].to_i
+
+    if row_move != col_move
+      return false
+    end
+
+    reached_end = false
+    col = source_col
+
+    if source_row > destination_row 
+      (source_row - 1).downto(destination_row) do |row|
+        if destination_col > source_col
+          col += 1
+          reached_end = col == destination_col
+          if @board[row][col][:team] != ""
+            break
+          end
+        else
+          col -= 1
+          reached_end = col == destination_col
+          if @board[row][col][:team] != ""
+            break
+          end
+        end
       end
     else
-      @col -= 1
-      if map[(index * 8) + @col] != ""
-        return true
-      end
-    end
-    false
-  end
-
-  def validate_bishop_move(piece_start, piece_end, territories)
-    row_move = (piece_start[0].to_i - piece_end[0].to_i).abs
-    col_move = (piece_start[1].to_i - piece_end[1].to_i).abs
-
-    start_row = piece_start[0].to_i
-    start_col = piece_start[1].to_i
-    end_row = piece_end[0].to_i
-    end_col = piece_end[1].to_i
-
-    loop_result = false
-    @col = start_col
-
-    if start_row > end_row
-      index = start_row - 1
-      while index <= end_row
-        loop_result = bishop_move(territories, start_col, end_col, index)
-        puts "index #{index}, end_row #{end_row}, loop_result #{loop_result}, col #{@col}"
-        index -= 1
-      end
-    else
-      index = start_row + 1
-      while index <= end_row
-        puts "index #{index}, end_row #{end_row}, loop_result #{loop_result}, col #{@col}"
-        loop_result = bishop_move(territories, start_col, end_col, index)
-        index += 1
+      (source_row + 1).upto(destination_row) do |row|
+        if destination_col > source_col
+          col += 1
+          reached_end = col == destination_col
+          if @board[row][col][:team] != ""
+            break
+          end
+        else
+          col -= 1
+          reached_end = col == destination_col
+          if @board[row][col][:team] != ""
+            break
+          end
+        end
       end
     end
 
-    row_move == col_move && loop_result
+    return reached_end ? move_piece(source_row, source_col, destination_row, destination_col) : false
   end
 
-  def validate_rock_move(piece_start, piece_end, territories)
-    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
-    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
-    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
-    true
+  def validate_rock_move(source, destination)
+    source_row = source[0].to_i
+    source_col = source[1].to_i
+
+    destination_row = destination[0].to_i
+    destination_col = destination[1].to_i
+
+    reached_end = false
+    dest_territory_team = @board[destination_row][destination_col][:team]
+    is_enemy = dest_territory_team != @turn
+
+    if source_row == destination_row
+      if source_col > destination_col
+
+        (source_col - 1).downto(destination_col) do |col|
+          reached_end = col == destination_col
+          if @board[source_row][col][:team] != ''
+            break
+          end
+        end
+        
+        return reached_end && is_enemy ? move_piece(source_row, source_col, destination_row, destination_col) : false
+      else
+        (source_col + 1).upto(destination_col) do |col|
+          reached_end = col == destination_col
+          if @board[source_row][col][:team] != ''
+            break
+          end
+        end
+        
+        return reached_end && is_enemy ? move_piece(source_row, source_col, destination_row, destination_col) : false
+      end
+    end
+
+    if source_col == destination_col
+      if source_row > destination_row
+
+        (source_row - 1).downto(destination_row) do |row|
+          reached_end = row == destination_row
+          if @board[row][source_col][:team] != ''
+            break
+          end
+        end
+        
+        return reached_end && is_enemy ? move_piece(source_row, source_col, destination_row, destination_col) : false
+      else
+        (source_row + 1).upto(destination_row) do |row|
+          reached_end = row == destination_row
+          if @board[row][source_col][:team] != ''
+            break
+          end
+        end
+
+        return reached_end && is_enemy ? move_piece(source_row, source_col, destination_row, destination_col) : false
+      end
+    end
   end
 
-  def validate_king_move(piece_start, piece_end, territories)
-    temp = @board[piece_end[0].to_i][piece_end[1].to_i]
-    @board[piece_end[0].to_i][piece_end[1].to_i] = @board[piece_start[0].to_i][piece_start[1].to_i]
-    @board[piece_start[0].to_i][piece_start[1].to_i] = temp
-    true
+  def validate_king_move(source, destination)
+    row_move = (source[0].to_i - destination[0].to_i).abs
+    col_move = (source[1].to_i - destination[1].to_i).abs
+
+    if row_move == col_move
+      return validate_bishop_move(source, destination)
+    end
+
+    validate_rock_move(source, destination)
   end
 
   def validate_pawn_move(piece_start, piece_end, occupier, turn)
@@ -162,7 +230,7 @@ class RoomsChannel < ApplicationCable::Channel
     true
   end
 
-  def validate_move(last_piece, starting_position, ending_position, occupier, turn, map)
+  def validate_move(last_piece, starting_position, ending_position, occupier, turn)
       piece_start = starting_position.split(':')
       piece_end = ending_position.split(':')
 
@@ -170,11 +238,11 @@ class RoomsChannel < ApplicationCable::Channel
         when "Knight"
           then validate_knight_move(piece_start, piece_end)
         when "Bishop"
-          then validate_bishop_move(piece_start, piece_end, map)
+          then validate_bishop_move(piece_start, piece_end)
         when "Rock"
-          then validate_rock_move(piece_start, piece_end, map)
+          then validate_rock_move(piece_start, piece_end)
         when "King"
-          then validate_king_move(piece_start, piece_end, map)
+          then validate_king_move(piece_start, piece_end)
         when "Pawn"
           then validate_pawn_move(piece_start, piece_end, occupier, turn)
         when "Queen"
