@@ -3,8 +3,6 @@ M
 app/javascript/application.js,1\5\152e2c420fe74ffc17152624ffc17eed9bcc66a5
 L
 app/javascript/chess_chat.js,9\0\9079525fb1ef9bcd1dcf7b2d766404c5c4f58ba6
-S
-#app/javascript/channels/consumer.js,a\2\a260d73223cd36f92215c8caab0b5c54c1db5b10
 P
  app/javascript/channels/index.js,1\e\1e38fcd5de01f9c1e6b2a91b29cdc7c779af67f2
 `

@@ -14,7 +14,7 @@ class ChessController < ApplicationController
   def get_board
     cache = ChessInMemCache.instance
     @board = Chess.new.get_board
-    id = SecureRandom.uuid
+    id = SecureRandom.uuid[0...5]
     cache.store_chess_board(id, @board)
     redirect_to "/chess/#{id}"
   end
