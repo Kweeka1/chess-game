@@ -13,8 +13,6 @@ function displayMessage(message) {
   chat.appendChild(messageEl)
 }
 
-let pieceMoveState = {}
-
 function moveValidationResult(data) {
   if (data.isValid) {
     movePieceToNewPos(data.start, data.end, true)
@@ -24,27 +22,18 @@ function moveValidationResult(data) {
   movePieceToNewPos(data.start, data.end, false)
 }
 
-export function validateMoveSv(lastPiece, lastPieceSelected, currentPieceSelected, currentPieceTeam, turn) {
-  const start = lastPieceSelected.getAttribute("coordination")
-  const end = currentPieceSelected.getAttribute("coordination")
+export function validateMoveSv(sourcePieceType, sourceEl, destinationEl) {
+  const start = sourceEl.getAttribute("coordination")
+  const end = destinationEl.getAttribute("coordination")
 
   roomChannel.send({
     message_type: "MOVE_VALIDATION",
-    details: {
-      last_piece: lastPiece,
-      starting_position: start,
-      ending_position: end,
-      occupier: currentPieceTeam,
-      turn: turn
+    data: {
+      source_piece: sourcePieceType,
+      source_str: start,
+      destination_str: end
     }
   })
-
-  pieceMoveState["piece"] = lastPiece
-  pieceMoveState["lastPieceEl"] = lastPieceSelected
-  pieceMoveState["currentPieceEl"] = currentPieceSelected
-  pieceMoveState["team"] = turn
-  pieceMoveState["start"] = start
-  pieceMoveState["end"] = end
 }
 
 const id = window.location.pathname.split("/").at(-1)
