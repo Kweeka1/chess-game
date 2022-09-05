@@ -77,24 +77,18 @@ class RoomsChannel < ApplicationCable::Channel
     true
   end
 
-  def validate_knight_move(source, destination)
-    row_move = (source[0].to_i - destination[0].to_i).abs
-    col_move = (source[1].to_i - destination[1].to_i).abs
+  def validate_knight_move(source_row, source_col, destination_row, destination_col)
+    row_move = (source_row - destination_row).abs
+    col_move = (source_col - destination_col).abs
 
     if row_move + col_move === 3
-      move_piece(source[0].to_i, source[0].to_i, destination[0].to_i, destination[1].to_i)
+      move_piece(source_row, source_col, destination_row, destination_col)
     end
   end
 
-  def validate_bishop_move(source, destination)
-    row_move = (source[0].to_i - destination[0].to_i).abs
-    col_move = (source[1].to_i - destination[1].to_i).abs
-
-    source_row = source[0].to_i
-    source_col = source[1].to_i
-
-    destination_row = destination[0].to_i
-    destination_col = destination[1].to_i
+  def validate_bishop_move(source_row, source_col, destination_row, destination_col)
+    row_move = (source_row - destination_row).abs
+    col_move = (source_col - destination_col).abs
 
     if row_move != col_move
       return false
@@ -140,12 +134,7 @@ class RoomsChannel < ApplicationCable::Channel
     reached_end ? move_piece(source_row, source_col, destination_row, destination_col) : false
   end
 
-  def validate_rock_move(source, destination)
-    source_row = source[0].to_i
-    source_col = source[1].to_i
-
-    destination_row = destination[0].to_i
-    destination_col = destination[1].to_i
+  def validate_rock_move(source_row, source_col, destination_row, destination_col)
 
     reached_end = false
     dest_territory_team = @board[destination_row][destination_col][:team]
@@ -198,22 +187,18 @@ class RoomsChannel < ApplicationCable::Channel
     end
   end
 
-  def validate_king_move(source, destination)
-    row_move = (source[0].to_i - destination[0].to_i).abs
-    col_move = (source[1].to_i - destination[1].to_i).abs
+  def validate_king_move(source_row, source_col, destination_row, destination_col)
+    row_move = (source_row - destination_row).abs
+    col_move = (source_col - destination_col).abs
 
     if row_move == col_move
-      return validate_bishop_move(source, destination)
+      return validate_bishop_move(source_row, source_col, destination_row, destination_col)
     end
 
-    validate_rock_move(source, destination)
+    validate_rock_move(source_row, source_col, destination_row, destination_col)
   end
 
-  def validate_pawn_move(source, destination)
-    source_row = source[0].to_i
-    source_col = source[1].to_i
-    destination_row = destination[0].to_i
-    destination_col = destination[1].to_i
+  def validate_pawn_move(source_row, source_col, destination_row, destination_col)
 
     row_move = (source_row - destination_row).abs
     col_move = (source_col - destination_col).abs
@@ -251,9 +236,9 @@ class RoomsChannel < ApplicationCable::Channel
     end
   end
 
-  def validate_queen_move(source, destination)
-    row_move = (source[0].to_i - destination[0].to_i).abs
-    col_move = (source[1].to_i - destination[1].to_i).abs
+  def validate_queen_move(source_row, source_col, destination_row, destination_col)
+    row_move = (source_row - destination_row).abs
+    col_move = (source_col - destination_col).abs
 
     (row_move === 0 || row_move === 1) && (col_move === 0 || col_move === 1)
   end
@@ -262,19 +247,24 @@ class RoomsChannel < ApplicationCable::Channel
       source = source_str.split(':')
       destination = destination_str.split(':')
 
+      source_row = source[0].to_i
+      source_col = source[1].to_i
+      destination_row = destination[0].to_i
+      destination_col = destination[1].to_i
+
       case source_piece_type
         when "Knight"
-          then validate_knight_move(source, destination)
+          then validate_knight_move(source_row, source_col, destination_row, destination_col)
         when "Bishop"
-          then validate_bishop_move(source, destination)
+          then validate_bishop_move(source_row, source_col, destination_row, destination_col)
         when "Rock"
-          then validate_rock_move(source, destination)
+          then validate_rock_move(source_row, source_col, destination_row, destination_col)
         when "King"
-          then validate_king_move(source, destination)
+          then validate_king_move(source_row, source_col, destination_row, destination_col)
         when "Pawn"
-          then validate_pawn_move(source, destination)
+          then validate_pawn_move(source_row, source_col, destination_row, destination_col)
         when "Queen"
-          then validate_queen_move(source, destination)
+          then validate_queen_move(source_row, source_col, destination_row, destination_col)
         else
           false
       end
