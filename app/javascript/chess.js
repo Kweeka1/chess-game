@@ -70,7 +70,7 @@ board.addEventListener("mousedown", function (ev) {
     // Move selected piece to an empty territory or enemy territory. Condition fails if selected piece is an ally
     if (source !== targetPiece && source !== null && targetPieceTeam !== turn) {
         clearPossibleMoves(territories, turn)
-        validateMoveSv(sourcePieceType, source, targetPiece, targetPieceTeam, turn)
+        validateMoveSv(sourcePieceType, source, targetPiece)
         return;
     }
 

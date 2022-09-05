@@ -1,0 +1,123 @@
+<%= stylesheet_link_tag "lobby", "data-turbo-track": "reload" %>
+
+<main class="main">
+  <section class="main__user">
+    <div class="stats">
+      <div class="current__stats">
+        <h6>Active Games:</h6>
+        <span id="games-count" ><%#= @game.current %> 24</span>
+      </div>
+      <div class="current__stats">
+        <h6>Online Users:</h6>
+        <span id="users-online" ><%#= @game.current %> 58</span>
+      </div>
+    </div>
+
+    <div>
+      
+    </div>
+  </section>
+  <section class="main__lobby">
+    <div class="main__lobby__users">
+      <div class="users__title">
+        <h6>Online</h6>
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter Users
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item active" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="users__container">
+        <p>kweeka</p>
+        <p>Guest35975</p>
+        <p>Guest457875</p>
+        <p>MrHeimerManher</p>
+        <p>Humanoid</p>
+        <p>caPs</p>
+        <p>Perkz</p>
+        <p>Broxah</p>
+        <p>Elyoya</p>
+        <p>Guest132864</p>
+        <p>Guest134845</p>
+        <p>Impact</p>
+        <p>Bjergsen</p>
+        <p>Hylisang</p>
+        <p>Upset</p>
+        <p>Jankos</p>
+        <p>Wunder</p>
+        <p>Armut</p>
+      </div>
+    </div>
+    <div class="main__lobby__rooms">
+      <table aria-describedby="current active chess rooms" class="table table-dark table-striped">
+        <thead>
+        <tr>
+          <th scope="col"><h6>Room name</h6></th>
+          <th scope="col"><h6>Host</h6></th>
+          <th scope="col"><h6>Players</h6></th>
+          <th scope="col"><h6>Viewers</h6></th>
+          <th scope="col"><h6>Description</h6></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Kweeka's room</td>
+          <td>Kweeka</td>
+          <td>1</td>
+          <td>2</td>
+          <td>Feel free to join</td>
+          <td colspan="2">
+            <div class="grp-buttons">
+              <button type="button" class="btn btn-primary">Play</button>
+              <button type="button" class="btn btn-secondary">View</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Kweeka's room</td>
+          <td>Kweeka</td>
+          <td>2</td>
+          <td >30</td>
+          <td>Feel free to join</td>
+          <td colspan="2">
+            <div class="grp-buttons">
+              <button type="button" class="btn btn-primary">Play</button>
+              <button type="button" class="btn btn-secondary">View</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Kweeka's room</td>
+          <td>Kweeka</td>
+          <td>2</td>
+          <td >5</td>
+          <td>Feel free to join</td>
+          <td colspan="2">
+            <div class="grp-buttons">
+              <button type="button" class="btn btn-primary">Play</button>
+              <button type="button" class="btn btn-secondary">View</button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="main__lobby__chat">
+      <div class="global__chat__title">
+        <h6>Global Chat</h6>
+      </div>
+      <div class="global__chat__container">
+
+      </div>
+    </div>
+  </section>
+</main>
