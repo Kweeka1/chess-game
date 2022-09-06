@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #afada7;
 }
 
 @media (prefers-color-scheme: light) {
@@ -15,6 +16,66 @@ body {
     }
     .current__stats > span {
         color: #0f5132;
+    }
+    .users__container > p {
+        color: black;
+    }
+    .users__title {
+        background-color: #afada7;
+        border-bottom: gray solid 1px;
+    }
+    .main__lobby__users {
+        background-color: #d7d5cc;
+    }
+    .main__lobby__rooms {
+        background-color: #d7d5cc;
+    }
+    .main__lobby__rooms > th, td, tr {
+        color: black;
+    }
+    .users__title > h6 {
+        margin: 0;
+    }
+    .global__chat__title {
+        border-bottom: gray solid 1px;
+        background-color: #afada7;
+        color: black;
+    }
+    .global__chat__container {
+        background-color: #d7d5cc;
+    }
+    tr > th {
+        background-color: #afada7 !important;
+        border-bottom-color: gray !important;
+    }
+    h6 {
+        color: #231a1a;
+    }
+    .users__container::-webkit-scrollbar-thumb {
+        background: #a7abab;  /* fallback for old browsers */
+        /*background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);  !* Chrome 10-25, Safari 5.1-6 *!*/
+        /*background: linear-gradient(to right, #ff6a00, #ee0979); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+        border-radius: 1.625rem;
+    }
+    .users__container::-webkit-scrollbar-track {
+        background: #c7c4c5;  /* fallback for old browsers */
+        /*background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);  !* Chrome 10-25, Safari 5.1-6 *!*/
+        /*background: linear-gradient(to right, #E2E2E2, #C9D6FF); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+        border-radius: 1.625rem;
+    }
+    .users__container::-webkit-scrollbar {
+        width: 10px;
+    }
+    .table__container::-webkit-scrollbar-thumb {
+        background: #a7abab;
+        border-radius: 1.625rem;
+    }
+    .table__container::-webkit-scrollbar-track {
+        background: #c7c4c5;
+        border-radius: 1.625rem;
+    }
+    .table__container::-webkit-scrollbar {
+        width: 10px;
     }
 }
 
@@ -34,6 +95,58 @@ body {
     .users__container > p {
         color: white;
     }
+    .users__title {
+        background-color: #212529;
+        border-bottom: white solid 1px;
+    }
+    .main__lobby__users {
+        background-color: #1e2125;
+    }
+    .main__lobby__rooms {
+        background-color: #1e2125;
+    }
+    .main__lobby__rooms > th, td, tr {
+        color: white;
+    }
+    .users__title > h6 {
+        margin: 0;
+        color: white;
+    }
+    .global__chat__title {
+        border-bottom: white solid 1px;
+        background-color: #212529;
+        color: white;
+    }
+    .global__chat__container {
+        border-left: white solid 1px;
+    }
+    .users__container::-webkit-scrollbar-thumb {
+        background: #504c4e;
+        border-radius: 1.625rem;
+    }
+    .users__container::-webkit-scrollbar-track {
+        border-radius: 1.625rem;
+    }
+    .users__container::-webkit-scrollbar {
+        width: 10px;
+    }
+    .table__container::-webkit-scrollbar-thumb {
+        background: #504c4e;  /* fallback for old browsers */
+        /*background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);  !* Chrome 10-25, Safari 5.1-6 *!*/
+        /*background: linear-gradient(to right, #ff6a00, #ee0979); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+        border-radius: 1.625rem;
+    }
+
+    .table__container::-webkit-scrollbar-track {
+        /*background: #b1b6b6;  !* fallback for old browsers *!*/
+        /*background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);  !* Chrome 10-25, Safari 5.1-6 *!*/
+        /*background: linear-gradient(to right, #E2E2E2, #C9D6FF); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+        border-radius: 1.625rem;
+    }
+
+    .table__container::-webkit-scrollbar {
+        width: 10px;
+    }
 }
 
 .main {
@@ -48,9 +161,13 @@ body {
     height: 60px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 10px;
+}
+
+.user__form > form > label {
+    margin: 0;
 }
 
 .users__title {
@@ -59,13 +176,6 @@ body {
     justify-content: space-around;
     width: 100%;
     height: 3.75rem;
-    background-color: #212529;
-    border-bottom: white solid 1px;
-}
-
-.users__title > h6 {
-    margin: 0;
-    color: white;
 }
 
 .stats {
@@ -97,17 +207,25 @@ body {
 .main__lobby__users {
     height: calc(100vh - 60px);
     width: 15%;
-    background-color: #1e2125;
 }
 
 .main__lobby__rooms {
     height: calc(100vh - 60px);
     flex-grow: 1;
-    background-color: #1e2125;
 }
 
-.main__lobby__rooms > th, td, tr {
-    color: white;
+.table__container {
+    height: calc(100vh - calc(3.75rem + 60px));
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+table {
+    margin: 0 !important;
+}
+
+.tbody__container {
+    padding: 0 !important;
 }
 
 .users__container {
@@ -115,24 +233,6 @@ body {
     height: calc(100vh - calc(3.75rem + 60px));
     overflow-x: hidden;
     overflow-y: scroll;
-}
-
-.users__container::-webkit-scrollbar-thumb {
-    background: #504c4e;  /* fallback for old browsers */
-    /*background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);  !* Chrome 10-25, Safari 5.1-6 *!*/
-    /*background: linear-gradient(to right, #ff6a00, #ee0979); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
-    border-radius: 1.625rem;
-}
-
-.users__container::-webkit-scrollbar-track {
-    /*background: #b1b6b6;  !* fallback for old browsers *!*/
-    /*background: -webkit-linear-gradient(to right, #E2E2E2, #C9D6FF);  !* Chrome 10-25, Safari 5.1-6 *!*/
-    /*background: linear-gradient(to right, #E2E2E2, #C9D6FF); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
-    border-radius: 1.625rem;
-}
-
-.users__container::-webkit-scrollbar {
-    width: 12px;
 }
 
 th, td, tr {
@@ -160,12 +260,9 @@ th > h6 {
 .global__chat__title {
     height: 3.75rem;
     width: 100%;
-    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: white solid 1px;
-    background-color: #212529;
 }
 
 .global__chat__title > h6 {
@@ -174,5 +271,4 @@ th > h6 {
 
 .global__chat__container {
     height: calc(100vh - calc(3.75rem + 60px));
-    border-left: white solid 1px;
 }

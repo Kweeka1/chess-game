@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get '/chess/:id', to: "chess#index"
   get '/chess/', to: 'chess#get_board'
   get '/', to: 'lobby#index'
+  post '/username', to: 'lobby#change_username'
   # Defines the root path route ("/")
   root "lobby#index"
 end
