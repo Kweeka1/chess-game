@@ -1,8 +1,8 @@
 <%= stylesheet_link_tag "lobby", "data-turbo-track": "reload" %>
 
 <main class="main">
-  <section class="main__user">
-    <div class="stats">
+  <section class="main__header">
+    <div class="header__left">
       <div class="current__stats">
         <h6>Active Games:</h6>
         <span id="games-count" ><%#= @game.current %> 24</span>
@@ -12,17 +12,24 @@
         <span id="users-online" ><%#= @game.current %> 58</span>
       </div>
     </div>
-    <div>
-      <div class="user__form">
-        <%= form_with model: User,  url: "/username", method: :post do |form| %>
+    <div class="header__right">
+      <div class="user__form__container">
+        <%= form_with model: User,  url: "/username", method: :post, id: 'user__form' do |form| %>
           <%= form.text_field :user, type: "text", class: "form-control", id: "username", value: @username %>
-          <button type="submit">Set</button>
+          <button class="btn btn-primary" type="submit">Set</button>
         <% end %>
+      </div>
+      <div class="create_btn__container">
+        <button class="btn btn-primary">Create Room</button>
+      </div>
+      <div class="theme_icon__container">
+        <%= image_tag 'sun', width: '30px', id: 'icon__sun' %>
+        <%= image_tag 'moon', width: '30px', id: 'icon__moon' %>
       </div>
     </div>
   </section>
   <section class="main__lobby">
-    <div class="main__lobby__users">
+    <div class="lobby__users">
       <div class="users__title">
         <h6>Online</h6>
         <div class="dropdown">
@@ -59,7 +66,7 @@
         <p>Armut</p>
       </div>
     </div>
-    <div class="main__lobby__rooms">
+    <div class="lobby__rooms">
       <table id="rooms-table" aria-describedby="current active chess rooms" class="table table-striped ">
         <thead>
         <tr>
@@ -228,15 +235,20 @@
         </tbody>
       </table>
     </div>
-    <div class="main__lobby__chat">
-      <div class="global__chat__title">
+    <div class="lobby__global_chat">
+      <div class="global_chat__title">
         <h6>Global Chat</h6>
       </div>
-      <div class="global__chat__container">
+      <div class="global_chat__container">
 
+      </div>
+      <div class="global_chat__input">
+        <input type="text" class="form-control" id="global_chat-field">
+        <button class="btn btn-primary" type="button">send</button>
       </div>
     </div>
   </section>
 </main>
 
-<%= javascript_include_tag 'lobby', defer: true %>
+<%= javascript_importmap_tags %>
+<%= javascript_import_module_tag "lobby" %>

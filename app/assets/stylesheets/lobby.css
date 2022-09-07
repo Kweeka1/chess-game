@@ -8,7 +8,7 @@ body {
     .main {
         background-color: #EDEADE;
     }
-    .main__user {
+    .main__header {
         background-color: #dcd7ce;
     }
     .current__stats > h6 {
@@ -24,24 +24,24 @@ body {
         background-color: #afada7;
         border-bottom: gray solid 1px;
     }
-    .main__lobby__users {
+    .lobby__users {
         background-color: #d7d5cc;
     }
-    .main__lobby__rooms {
+    .lobby__rooms {
         background-color: #d7d5cc;
     }
-    .main__lobby__rooms > th, td, tr {
+    .lobby__rooms > th, td, tr {
         color: black;
     }
     .users__title > h6 {
         margin: 0;
     }
-    .global__chat__title {
+    .global_chat__title {
         border-bottom: gray solid 1px;
         background-color: #afada7;
         color: black;
     }
-    .global__chat__container {
+    .global_chat__container {
         background-color: #d7d5cc;
     }
     tr > th {
@@ -83,7 +83,7 @@ body {
     .main {
         background-color: #1e2125;
     }
-    .main__user {
+    .main__header {
         background-color: #2f3234;
     }
     .current__stats > h6 {
@@ -99,25 +99,25 @@ body {
         background-color: #212529;
         border-bottom: white solid 1px;
     }
-    .main__lobby__users {
+    .lobby__users {
         background-color: #1e2125;
     }
-    .main__lobby__rooms {
+    .lobby__rooms {
         background-color: #1e2125;
     }
-    .main__lobby__rooms > th, td, tr {
+    .lobby__rooms > th, td, tr {
         color: white;
     }
     .users__title > h6 {
         margin: 0;
         color: white;
     }
-    .global__chat__title {
+    .global_chat__title {
         border-bottom: white solid 1px;
         background-color: #212529;
         color: white;
     }
-    .global__chat__container {
+    .global_chat__container {
         border-left: white solid 1px;
     }
     .users__container::-webkit-scrollbar-thumb {
@@ -155,7 +155,7 @@ body {
     flex-direction: column;
 }
 
-.main__user {
+.main__header {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
@@ -166,8 +166,53 @@ body {
     padding: 10px;
 }
 
-.user__form > form > label {
+.user__form__container > form > label {
     margin: 0;
+}
+
+#user__form {
+    display: flex;
+}
+
+#user__form > input {
+    border-radius: 5px 0 0 5px !important;
+    width: 10rem;
+    transition: none;
+    background-clip: unset;
+}
+
+#user__form > input:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+#user__form > button {
+    border-radius: 0 5px 5px 0 !important;
+}
+
+#icon__sun, #icon__moon {
+    display: none;
+}
+
+.theme_icon__container {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+}
+
+.theme_icon__container:hover {
+    background-color: #c5c2c2;
+    border-radius: 1.625rem;
+}
+
+.header__right {
+    display: flex;
+    justify-content: space-between;
+    width: 30vw;
 }
 
 .users__title {
@@ -178,7 +223,7 @@ body {
     height: 3.75rem;
 }
 
-.stats {
+.header__left {
     display: flex;
     gap: 20px
 }
@@ -204,12 +249,12 @@ body {
     flex-direction: row;
 }
 
-.main__lobby__users {
+.lobby__users {
     height: calc(100vh - 60px);
     width: 15%;
 }
 
-.main__lobby__rooms {
+.lobby__rooms {
     height: calc(100vh - 60px);
     flex-grow: 1;
 }
@@ -252,12 +297,14 @@ th > h6 {
 }
 
 
-.main__lobby__chat {
+.lobby__global_chat {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 25%;
 }
 
-.global__chat__title {
+.global_chat__title {
     height: 3.75rem;
     width: 100%;
     display: flex;
@@ -265,10 +312,31 @@ th > h6 {
     align-items: center;
 }
 
-.global__chat__title > h6 {
+.global_chat__title > h6 {
     margin: 0;
 }
 
-.global__chat__container {
-    height: calc(100vh - calc(3.75rem + 60px));
+.global_chat__container {
+    flex-grow: 1;
+}
+
+.global_chat__input {
+    display: flex;
+}
+
+.global_chat__input > input {
+    border: none;
+    border-radius: 0;
+    transition: none;
+    background-clip: unset;
+}
+
+.global_chat__input > input:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.global_chat__input > button {
+    border-radius: 0;
 }
