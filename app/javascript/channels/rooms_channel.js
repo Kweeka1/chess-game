@@ -1,4 +1,4 @@
-import consumer from "channels/consumer"
+import { createChessConsumer } from "channels/consumer"
 import {movePieceToNewPos} from "../chess";
 const chat = document.getElementById("chat-display")
 
@@ -38,7 +38,7 @@ export function validateMoveSv(sourcePieceType, sourceEl, destinationEl) {
 
 const id = window.location.pathname.split("/").at(-1)
 
-export const roomChannel = consumer.subscriptions.create({channel: "RoomsChannel", room: id}, {
+export const roomChannel = createChessConsumer.subscriptions.create({channel: "RoomsChannel", room: id}, {
   connected() {
     // Called when the subscription is ready for use on the server
     console.log("Connected")

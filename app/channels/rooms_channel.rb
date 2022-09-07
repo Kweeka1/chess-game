@@ -11,6 +11,7 @@ class RoomsChannel < ApplicationCable::Channel
     piece_move: "MOVE_VALIDATION"
   }
   def subscribed
+    puts params
     @board = $cache.get_chess_board(params[:room])
     stream_from "rooms_#{params[:room]}"
   end
