@@ -1,19 +1,19 @@
-<%= stylesheet_link_tag "lobby", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "lobby.styles", "data-turbo-track": "reload" %>
 
 <main class="main">
   <section class="main__header">
     <div class="header__left">
       <div class="current__stats">
         <h6>Active Games:</h6>
-        <span id="games-count" ><%#= @game.current %> 24</span>
+        <span id="games-count" >24</span>
       </div>
       <div class="current__stats">
         <h6>Online Users:</h6>
-        <span id="users-online" ><%#= @game.current %> 58</span>
+        <span id="users-online">Loading...</span>
       </div>
     </div>
     <div class="header__right">
-      <div class="user__form__container">
+      <div data-turbo="false" class="user__form__container">
         <%= form_with model: User,  url: "/username", method: :post, id: 'user__form' do |form| %>
           <%= form.text_field :user, type: "text", class: "form-control", id: "username", value: @username %>
           <button class="btn btn-primary" type="submit">Set</button>
@@ -45,29 +45,12 @@
           </ul>
         </div>
       </div>
-      <div class="users__container">
-        <p>kweeka</p>
-        <p>Guest35975</p>
-        <p>Guest457875</p>
-        <p>MrHeimerManher</p>
-        <p>Humanoid</p>
-        <p>caPs</p>
-        <p>Perkz</p>
-        <p>Broxah</p>
-        <p>Elyoya</p>
-        <p>Guest132864</p>
-        <p>Guest134845</p>
-        <p>Impact</p>
-        <p>Bjergsen</p>
-        <p>Hylisang</p>
-        <p>Upset</p>
-        <p>Jankos</p>
-        <p>Wunder</p>
-        <p>Armut</p>
+      <div id="users-container" class="users__container">
+
       </div>
     </div>
     <div class="lobby__rooms">
-      <table id="rooms-table" aria-describedby="current active chess rooms" class="table table-striped ">
+      <table id="rooms-table" aria-describedby="current active chess rooms" class="table table-striped">
         <thead>
         <tr>
           <th scope="col"><h6>Room name</h6></th>
@@ -239,16 +222,16 @@
       <div class="global_chat__title">
         <h6>Global Chat</h6>
       </div>
-      <div class="global_chat__container">
+      <div id="global-chat" class="global_chat__container">
 
       </div>
       <div class="global_chat__input">
-        <input type="text" class="form-control" id="global_chat-field">
-        <button class="btn btn-primary" type="button">send</button>
+        <input id="global-chat-input" type="text" class="form-control">
+        <button id="global-chat-send" class="btn btn-primary" type="button">send</button>
       </div>
     </div>
   </section>
 </main>
 
 <%= javascript_importmap_tags %>
-<%= javascript_import_module_tag "lobby" %>
+<%= javascript_import_module_tag "channels/lobby_channel" %>
