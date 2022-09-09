@@ -1,4 +1,5 @@
 class LobbyController < ApplicationController
+  require 'chess_in_mem_cache'
   def index
     user_id = cookies['id']
     @username = cookies['username']
@@ -22,7 +23,9 @@ class LobbyController < ApplicationController
   end
 
   def change_username
+    redis = ChessInMemCache.instance
     user_id = cookies['id']
+    old_username = cookies['username']
     user = User.find_by user_guid: user_id
 
     if user
@@ -36,18 +39,20 @@ class LobbyController < ApplicationController
       user.save
     end
 
+    redis.remove("#{user_id}:#{old_username}")
+
     cookies['username'] = {
       value: user.user,
       expires: Time.now + 3600,
       httponly: true
     }
-    redirect_to '/'
+
+    redirect_back(fallback_location: "/")
   end
 
   private
 
   def username_params
-    puts params.values_at('user')[0][:user]
     params.values_at('user')[0][:user]
   end
 end

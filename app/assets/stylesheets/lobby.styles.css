@@ -302,6 +302,14 @@ th > h6 {
     flex-direction: column;
     height: 100%;
     width: 25%;
+    overflow: hidden;
+}
+
+.global_chat__container > p {
+    word-break: break-all;
+    white-space: normal;
+    padding-bottom: 1px;
+    margin-bottom: 0;
 }
 
 .global_chat__title {
@@ -318,6 +326,7 @@ th > h6 {
 
 .global_chat__container {
     flex-grow: 1;
+    padding: 5px;
 }
 
 .global_chat__input {
