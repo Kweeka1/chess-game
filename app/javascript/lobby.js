@@ -13,13 +13,24 @@ const playersDatalist = document.querySelector(".players__datalist")
 const roomOpponentInput = document.querySelector(".room_opponent")
 
 let currentPlayers = []
+function randomHsl() {
+    return  'rgb(' +
+    (Math.floor(Math.random()*56)+120) + ', ' +
+    (Math.floor(Math.random()*56)+120) + ', ' +
+    (Math.floor(Math.random()*56)+120) +
+    ')';
+}
+const userColor = randomHsl()
+localStorage.setItem("userColor", userColor)
 
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    localStorage.setItem("theme", "dark")
     table.classList.remove("table-light")
     table.classList.add("table-dark")
     sunIcon.style.display = "none"
     moonIcon.style.display = "block"
 } else {
+    localStorage.setItem("theme", "light")
     table.classList.remove("table-dark")
     table.classList.add("table-light")
     moonIcon.style.display = "none"
@@ -34,11 +45,13 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', eve
         table.classList.add("table-dark")
         sunIcon.style.display = "none"
         moonIcon.style.display = "block"
+        localStorage.setItem("theme", "dark")
     } else {
         table.classList.remove("table-dark")
         table.classList.add("table-light")
         moonIcon.style.display = "none"
         sunIcon.style.display = "block"
+        localStorage.setItem("theme", "light")
     }
 });
 
@@ -55,10 +68,20 @@ moonIcon.addEventListener('mousedown', function () {
 })
 
 function generateRandomColor() {
+    let theme = localStorage.getItem("theme")
     let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += Math.floor(Math.random() * 8);
+
+    if (theme === "light") {
+        for (let i = 0; i < 6; i++) {
+            color += Math.floor(Math.random() * 8);
+        }
+        return color;
     }
+    const letters = '0123456789ABCDEF';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    console.log(color)
     return color;
 }
 
@@ -87,18 +110,24 @@ export function removeUser(user) {
     }
 }
 
-const userColor = generateRandomColor()
-
-export function appendChatMessage(user, text) {
+export function appendChatMessage(user, text, color) {
+    let theme = localStorage.getItem("theme")
     const wrapper = document.createElement("div")
 
     const username = document.createElement("span")
     username.textContent = `${user}: `
-    username.style.color = userColor
+    username.style.color = color
+    username.style.fontWeight = "600"
 
     const message = document.createElement("p")
     message.style.display = "inline"
     message.textContent = text
+
+    if (theme === "light") {
+        message.style.color = "black"
+    } else {
+        message.style.color = "white"
+    }
 
     wrapper.appendChild(username)
     wrapper.appendChild(message)

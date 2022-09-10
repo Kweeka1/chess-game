@@ -48,7 +48,8 @@ class LobbyChannel < ApplicationCable::Channel
       type: @@message_types[:chat],
       data: {
         user: data["user"],
-        message: data["message"]
+        message: data["message"],
+        color: data["color"]
       }
     }
   end

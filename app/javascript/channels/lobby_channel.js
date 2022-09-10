@@ -13,6 +13,8 @@ globalChatInput.addEventListener("keypress", function (event) {
   }
 })
 
+const color = localStorage.getItem("userColor")
+
 const messageTypes = {
   chat: "GLOBAL_CHAT_MESSAGE",
   user_sub: "USER_SUBSCRIBED",
@@ -29,7 +31,8 @@ function sendMessage() {
       message_type: messageTypes.chat,
       data: {
         user: username,
-        message: text.trim()
+        message: text.trim(),
+        color: color
       }
     })
   }
@@ -57,7 +60,7 @@ export const lobbyChannel = createLobbyConsumer.subscriptions.create({ channel: 
       case messageTypes.user_unsub:
         return removeUser(response.user)
       case messageTypes.chat:
-        return appendChatMessage(response.data.user, response.data.message)
+        return appendChatMessage(response.data.user, response.data.message, response.data.color)
       case messageTypes.create_room:
         return appendRoom(response.data)
       default:

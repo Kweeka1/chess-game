@@ -5,6 +5,15 @@ body {
 }
 
 @media (prefers-color-scheme: light) {
+    .room_details__container {
+        background-color: #e0deda;
+    }
+    .create_room__title > h1 {
+        color: black;
+    }
+    .detail > label {
+        color: black;
+    }
     .main {
         background-color: #EDEADE;
     }
@@ -80,6 +89,26 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
+    .room_details__container {
+        background-color: #23242A;
+        border: #DAD6DF solid 1px;
+    }
+    .create_room__title > h1 {
+        padding-left: 1rem;
+        color: white;
+    }
+    .detail > label {
+        color: white;
+    }
+    .detail > input {
+        background-color: #cdc8d0;
+    }
+    .detail > select {
+        background-color: #cdc8d0;
+    }
+    .detail > textarea {
+        background-color: #cdc8d0;
+    }
     .main {
         background-color: #1e2125;
     }
@@ -363,10 +392,10 @@ th > h6 {
 }
 
 .room_details__container {
+    padding: 0.5rem;
     display: none;
-    background-color: #e0deda;
     width: 60%;
-    height: 30rem;
+    height: 32rem;
     position: absolute;
     z-index: 20;
     top: 50%;
