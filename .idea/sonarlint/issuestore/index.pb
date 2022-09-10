@@ -29,3 +29,9 @@ E
 config/application.rb,7\f\7ff7049c1c8745b54f0a9ef78996f60b38f36268
 R
 "config/environments/development.rb,e\5\e54c3d8d363f5b004526c7fcab8f8eb31da5a209
+<
+lib/chess.rb,8\a\8a7df748ad98639bab884c1dd80a9af71a4fd848
+7
+Gemfile,d\e\de3150c01c3a946a6168173c4116741379fe3579
+X
+(app/javascript/channels/rooms_channel.js,e\7\e7095c18a20a147c6a47f704dda6e043dda5a39e

@@ -171,8 +171,6 @@ GEM
     reline (0.3.1)
       io-console (~> 0.5)
     rexml (3.2.5)
-    ruby-debug-ide (0.7.3)
-      rake (>= 0.8.1)
     rubyzip (2.3.2)
     selenium-webdriver (4.4.0)
       childprocess (>= 0.5, < 5.0)
@@ -230,7 +228,6 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.3, >= 7.0.3.1)
   redis (~> 4.0)
-  ruby-debug-ide
   selenium-webdriver
   sprockets-rails
   sqlite3 (~> 1.4)
