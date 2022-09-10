@@ -1,5 +1,5 @@
 import { createLobbyConsumer } from "channels/consumer"
-import {appendUsers, removeUser, appendChatMessage} from "../lobby";
+import {appendUsers, removeUser, appendChatMessage, appendRoom} from "../lobby";
 
 const globalChatInput = document.getElementById("global-chat-input")
 const globalChatSend = document.getElementById("global-chat-send")
@@ -17,8 +17,8 @@ const messageTypes = {
   chat: "GLOBAL_CHAT_MESSAGE",
   user_sub: "USER_SUBSCRIBED",
   user_unsub: "USER_UNSUBSCRIBED",
-  create_room: "ROOM_CREATE",
-  delete_room: "ROOM_DELETE",
+  create_room: "ROOM_CREATED",
+  delete_room: "ROOM_DELETED",
 }
 
 function sendMessage() {
@@ -58,6 +58,8 @@ export const lobbyChannel = createLobbyConsumer.subscriptions.create({ channel: 
         return removeUser(response.user)
       case messageTypes.chat:
         return appendChatMessage(response.data.user, response.data.message)
+      case messageTypes.create_room:
+        return appendRoom(response.data)
       default:
         console.log(response)
     }
