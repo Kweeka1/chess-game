@@ -1,0 +1,53 @@
+<div id="create-room-wrapper" class="room_details__wrapper"></div>
+<div id="create-room-container" class="room_details__container shadow-lg p-3 mb-5 bg-body rounded">
+  <div class="create_room__title">
+    <h1>Create Room</h1>
+    <span id="create-room-close-icon" class="icon-close">&#x2715;</span>
+  </div>
+  <%= form_with url: '/create-room', model: @room, method: :post do |form|  %>
+    <div class="room__desc">
+      <div class="detail">
+        <label for="room-title">Room Title</label>
+        <%= form.text_field :room_name, class: "form-control", type: "text", id: "room-title", placeholder: "#{@username}'s room" %>
+      </div>
+      <div class="detail">
+        <label for="room-privacy">Room Privacy</label>
+        <%= form.select :room_privacy, options_for_select(@privacy_types, selected: 'public'), { include_blank: false }, { class: "form-select select_privacy"} %>
+      </div>
+    </div>
+    <div class="room__desc">
+      <div class="detail">
+        <label for="room-opponent" class="form-label">Room Opponent</label>
+        <%= form.text_field :room_opponent, required: true, type: "text", class: "form-control room_opponent", list: "online-players-options", id: "room-opponent", placeholder: "Choose opponent" %>
+        <datalist class="players__datalist" id="online-players-options">
+          <option id="wait">Free to join</option>
+        </datalist>
+      </div>
+      <div class="detail">
+        <label for="room-password">Room Password</label>
+        <%= form.text_field :room_password, type: "password", class: "form-control", list: "online-players-options", id: "room-password", placeholder: "Leave it empty for none" %>
+      </div>
+    </div>
+    <div class="detail">
+      <label for="room-description">Room Description</label>
+      <%= form.text_area :room_description, maxlength: "105", class: "form-control", id: "room-description" %>
+    </div>
+    <div class="last-row-container">
+      <div class="detail">
+        <label for="room-allow-viewers">Allow Viewers</label>
+        <%= form.select :room_allow_viewers,
+                        options_for_select(@viewers_access_types, 'allow'),
+                        { include_blank: false },
+                        { class: "form-select select_privacy"} %>
+      </div>
+      <div class="detail">
+        <label for="room-allow-viewers">In Game Chat</label>
+        <%= form.select :room_only_players_chat,
+                        options_for_select(@chat_access_types, 'allow'),
+                        { include_blank: false },
+                        { class: "form-select select_privacy"} %>
+      </div>
+      <button class="btn btn-primary" type="submit">Create Room</button>
+    </div>
+  <% end %>
+</div>
