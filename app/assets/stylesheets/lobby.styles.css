@@ -212,7 +212,7 @@ body {
 .header__right {
     display: flex;
     justify-content: space-between;
-    width: 30vw;
+    width: 40vw;
 }
 
 .users__title {
@@ -260,7 +260,7 @@ body {
 }
 
 .table__container {
-    height: calc(100vh - calc(3.75rem + 60px));
+    height: calc(100vh - calc(3.75rem + 61px));
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -348,4 +348,96 @@ th > h6 {
 
 .global_chat__input > button {
     border-radius: 0;
+}
+
+.room_details__wrapper {
+    display: none;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000;
+    top: 0;
+    opacity: 0.3;
+    overflow-x: hidden;
+    z-index: 10;
+}
+
+.room_details__container {
+    display: none;
+    background-color: #e0deda;
+    width: 60%;
+    height: 30rem;
+    position: absolute;
+    z-index: 20;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.room_buttons__container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.room__desc {
+    display: flex;
+    width: 100%;
+}
+
+.detail {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 2rem 0.75rem 1rem;
+}
+
+.detail > input[type="text"] {
+    width: 15rem;
+}
+
+.detail > input[type="password"] {
+    width: 15rem;
+}
+
+.detail > select {
+    width: 15rem;
+}
+
+.detail > label {
+    margin-bottom: 5px;
+}
+
+.select_privacy {
+    width: 200px;
+}
+
+#room-description {
+    width: 72%;
+    resize: none;
+}
+
+.last-row-container {
+    display: flex;
+}
+
+.last-row-container > button {
+    position: absolute;
+    width: 10rem;
+    height: 40px;
+    bottom: 2rem;
+    right: 2rem;
+}
+
+.create_room__title {
+    display: flex;
+}
+
+.create_room__title > .icon-close {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.75rem;
+    font-size: 30px;
+    cursor: pointer;
 }
