@@ -1,10 +1,12 @@
 class LobbyController < ApplicationController
   require 'chess_in_mem_cache'
+  require 'chess'
   before_action :room_viewers_options, :room_chat_options, :room_privacy_options
   def index
     user_id = cookies['id']
     @username = cookies['username']
     @room = Room.new
+    @room_errors = @room.errors
 
     if !user_id
       id = SecureRandom.uuid
@@ -12,33 +14,51 @@ class LobbyController < ApplicationController
 
       cookies['username'] = {
         value: @username,
-        expires: Time.now + 3600,
+        expires: Time.now.next_year,
         httponly: true
       }
       cookies['id'] = {
         value: id,
-        expires: Time.now + 3600,
+        expires: Time.now.next_year,
         httponly: true
       }
-      return render 'index'
+
+      File.open("#{Dir.getwd}/log/logs.txt", mode = 'w') do |logs|
+        logs << "[#{Time.now}]: Connection from #{@username} with IP address #{request.remote_ip} with Id #{id}"
+      end
+
+      render 'index'
     end
   end
 
   def create_room
     @room = Room.new
-    @room = create_room_params
-    @room.room_id = create_room_params[:room_name].strip.gsub(/[^0-9a-z]/i, '', '_')
 
-    unless @room.save
-      render 'index'
+    @room[:room_id] = create_room_params[:room_name].to_s.strip.gsub(/[^0-9a-z]/i, '_')
+    @room[:room_name] = create_room_params[:room_name]
+    @room[:room_description] = create_room_params[:room_description]
+    @room[:room_password] = create_room_params[:room_password]
+    @room[:room_opponent] = create_room_params[:room_opponent]
+    @room[:room_allow_viewers] = create_room_params[:room_allow_viewers]
+    @room[:room_privacy] = create_room_params[:room_privacy]
+    @room[:room_only_players_chat] = create_room_params[:room_only_players_chat]
+
+    if @room.save
+      cache = ChessInMemCache.instance
+      @board = Chess.new.get_board
+      cache.store_chess_board(@room[:room_id], @board)
+
+      @room_id = @room[:room_id]
+      redirect_to "/chess/#{@room[:room_id]}"
+    else
+      File.open("#{Dir.getwd}/log/logs.txt", mode = 'w') do |logs|
+        logs << "#{@room.errors.inspect}\n"
+      end
+      puts @room.errors.inspect
+      render :'lobby/index', status: :unprocessable_entity
     end
 
-    cache = ChessInMemCache.instance
-    @board = Chess.new.get_board
-    cache.store_chess_board(room_id, @board)
 
-    ActionCable.server.broadcast 'lobby_channel_global', {type: 'ROOM_CREATED'}
-    redirect_to '/'
   end
 
   def change_username

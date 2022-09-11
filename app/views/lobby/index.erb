@@ -100,8 +100,13 @@
     </div>
   </section>
 </main>
-
 <%= render 'shared/create_room' %>
 
+<% if @room_id %>
+  <script>
+      console.log("room_id <%= @room_id %>")
+      window.location.href = `/chess/${<%= @room_id %>>}`
+  </script>
+<% end %>
 <%= javascript_importmap_tags %>
 <%= javascript_import_module_tag "channels/lobby_channel" %>

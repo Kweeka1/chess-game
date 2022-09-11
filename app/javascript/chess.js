@@ -21,7 +21,7 @@ function selectOtherPiece(currentPiece) {
 
 export function movePieceToNewPos(start, end, isValidMove) {
     if (!isValidMove) {
-        source.classList.remove("selected")
+        source?.classList.remove("selected")
         source = null
         return;
     }
@@ -55,8 +55,8 @@ board.addEventListener("mousedown", function (ev) {
         targetPiece = targetPiece.parentElement
     }
 
-    let targetPieceTeam = targetPiece.getAttribute("team")
-    let targetPieceType = targetPiece.getAttribute("piece")
+    let targetPieceTeam = targetPiece?.getAttribute("team")
+    let targetPieceType = targetPiece?.getAttribute("piece")
 
     let sourcePieceTeam = source?.getAttribute("team")
 

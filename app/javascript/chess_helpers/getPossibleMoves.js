@@ -227,7 +227,7 @@ function getKingMoves(startingPosition, territories, turn) {
 export function clearPossibleMoves(territories) {
     while (possibleMoves.length !== 0) {
         let item = possibleMoves.shift()
-        if (territories[item].firstElementChild.nodeName === "SPAN") {
+        if (territories[item]?.firstElementChild?.nodeName === "SPAN") {
             territories[item].innerHTML = ""
         } else {
             territories[item].classList.remove("enemy")

@@ -7,8 +7,6 @@ class ChessController < ApplicationController
     board = cache.get_chess_board(params[:id])
     @room_name = params[:id]
     @board = board
-    # File.open("#{Dir.pwd}/log/chess.txt", mode: 'w') do |file|
-    #   file << @board[1][0][:piece]
-    # end
+    render 'chess/index'
   end
 end
