@@ -6,7 +6,6 @@ class LobbyController < ApplicationController
     user_id = cookies['id']
     @username = cookies['username']
     @room = Room.new
-    @room_errors = @room.errors
 
     if !user_id
       id = SecureRandom.uuid

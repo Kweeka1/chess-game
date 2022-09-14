@@ -394,7 +394,7 @@ th > h6 {
 }
 
 .room_details__container {
-    padding: 0.5rem;
+    padding: 1rem;
     display: none;
     width: 60%;
     height: 32rem;
@@ -436,6 +436,10 @@ th > h6 {
     width: 15rem;
 }
 
+.detail > p {
+    width: 15rem;
+}
+
 .detail > label {
     margin-bottom: 5px;
 }
@@ -444,8 +448,13 @@ th > h6 {
     width: 200px;
 }
 
+.field_with_errors {
+    all: unset;
+    width: 15rem;
+}
+
 #room-description {
-    width: 72%;
+    width: 33rem;
     resize: none;
 }
 

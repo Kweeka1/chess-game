@@ -21,6 +21,7 @@ const messageTypes = {
   user_unsub: "USER_UNSUBSCRIBED",
   create_room: "ROOM_CREATED",
   delete_room: "ROOM_DELETED",
+  current_rooms: "ACTIVE_ROOMS"
 }
 
 function sendMessage() {
@@ -63,6 +64,9 @@ export const lobbyChannel = createLobbyConsumer.subscriptions.create({ channel: 
         return appendChatMessage(response.data.user, response.data.message, response.data.color)
       case messageTypes.create_room:
         return appendRoom(response.data)
+      case messageTypes.current_rooms:
+        response.data.forEach(room => appendRoom(room))
+        break;
       default:
         console.log(response)
     }

@@ -5,7 +5,7 @@ class ChessInMemCache
   include Singleton
 
   $redis = Redis.new(host: 'localhost')
-  USERS_KEY = 'Connected_Users'
+  USERS_KEY = 'connected_users'
 
   def store_chess_board(id, board)
     $redis.set(id, Marshal.dump(board))

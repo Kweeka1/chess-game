@@ -3,7 +3,6 @@ class LobbyChannel < ApplicationCable::Channel
 
   after_subscribe :send_subed_users
   after_unsubscribe :send_unsubed_user
-  @@players_count = []
 
   @@cache = ChessInMemCache.instance
 
@@ -11,13 +10,16 @@ class LobbyChannel < ApplicationCable::Channel
     chat: "GLOBAL_CHAT_MESSAGE",
     user_sub: "USER_SUBSCRIBED",
     user_unsub: "USER_UNSUBSCRIBED",
-    create_room: "ROOM_CREATE",
-    delete_room: "ROOM_DELETE",
+    create_room: "ROOM_CREATED",
+    delete_room: "ROOM_DELETED",
+    current_rooms: "ACTIVE_ROOMS"
   }
 
   def subscribed
     stream_from "lobby_channel_global"
     @@cache.add("#{current_user[:id]}:#{current_user[:user]}")
+    rooms = Room.all
+    ActionCable.server.broadcast "lobby_channel_global", {type: @@message_types[:current_rooms], data: rooms}
   end
   def unsubscribed
     @@cache.remove("#{current_user[:id]}:#{current_user[:user]}")

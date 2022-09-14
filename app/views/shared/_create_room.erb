@@ -1,19 +1,14 @@
-<div id="create-room-wrapper" class="room_details__wrapper"></div>
-<div data-turbo="false" id="create-room-container" class="room_details__container rounded">
+<div style="<% if @room.errors.present? %><%= 'display: block;' %><% end %>" id="create-room-wrapper" class="room_details__wrapper"></div>
+<div style="<% if @room.errors.present? %><%= 'display: block;' %><% end %>" data-turbo="false" id="create-room-container" class="room_details__container rounded">
   <div class="create_room__title">
     <h1>Create Room</h1>
     <span id="create-room-close-icon" class="icon-close">&#x2715;</span>
   </div>
-  <%= form_with local: true, url: '/create-room', model: @room, method: :post do |form|  %>
-    <% @room.errors.full_messages_for(:room_id).each do |msg| %>
-      <p class="text-danger pt-2">
-        <%= msg %>
-      </p>
-    <% end %>
+  <%= form_with local: true, url: '/create-room', id: 'room-form', model: @room, method: :post do |form|  %>
     <div class="room__desc">
       <div class="detail">
         <label for="room-title">Room Title</label>
-        <%= form.text_field :room_name, class: "form-control", type: "text", id: "room-title", placeholder: "#{@username}'s room" %>
+        <%= form.text_field :room_name, autocomplete: 'off', class: "form-control", type: "text", id: "room-title", placeholder: "#{@username}'s room" %>
         <% @room.errors.full_messages_for(:room_name).each do |msg| %>
           <p class="text-danger pt-2">
             <%= msg %>
@@ -33,7 +28,7 @@
     <div class="room__desc">
       <div class="detail">
         <label for="room-opponent" class="form-label">Room Opponent</label>
-        <%= form.text_field :room_opponent, required: true, type: "text", class: "form-control room_opponent", list: "online-players-options", id: "room-opponent", placeholder: "Choose opponent" %>
+        <%= form.text_field :room_opponent, autocomplete: 'off', required: true, type: "text", class: "form-control room_opponent", list: "online-players-options", id: "room-opponent", placeholder: "Choose opponent" %>
         <% @room.errors.full_messages_for(:room_opponent).each do |msg| %>
           <p class="text-danger pt-2">
             <%= msg %>

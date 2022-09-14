@@ -9,6 +9,8 @@ const openButton = document.getElementById("create-room-button")
 const createRoomContainer = document.getElementById("create-room-container")
 const createRoomWrapper = document.getElementById("create-room-wrapper")
 const roomsList = document.getElementById("rooms-list")
+const roomForm = document.getElementById("room-form")
+const roomTitle = document.getElementById("room-title")
 const playersDatalist = document.querySelector(".players__datalist")
 const roomOpponentInput = document.querySelector(".room_opponent")
 
@@ -112,27 +114,19 @@ export function removeUser(user) {
 
 export function appendChatMessage(user, text, color) {
     let theme = localStorage.getItem("theme")
-    const wrapper = document.createElement("div")
+    let textColor = ""
 
-    const username = document.createElement("span")
-    username.textContent = `${user}: `
-    username.style.color = color
-    username.style.fontWeight = "600"
+    if (theme === "light") textColor = "black"
+    else textColor = "white"
 
-    const message = document.createElement("p")
-    message.style.display = "inline"
-    message.textContent = text
+    const html = `
+        <div>
+            <span style="color: ${color}; font-weight: 600;">${user}:</span>
+            <p style="display: inline; color: ${textColor}">${text}</p>
+        </div>
+    `
 
-    if (theme === "light") {
-        message.style.color = "black"
-    } else {
-        message.style.color = "white"
-    }
-
-    wrapper.appendChild(username)
-    wrapper.appendChild(message)
-
-    globalChat.appendChild(wrapper)
+    globalChat.insertAdjacentHTML("beforeend", html)
 }
 
 openButton.addEventListener("mousedown", function () {
@@ -147,36 +141,23 @@ openButton.addEventListener("mousedown", function () {
 })
 
 export function appendRoom(data) {
-    const row = document.createElement("tr")
+    const row = `
+        <tr>
+            <td>${data.room_name}</td>
+            <td>${data.room_opponent}</td>
+            <td colspan="2">${data.players_count}</td>
+            <td colspan="3">${data.viewers_count}</td>
+            <td>${data.room_description}</td>
+            <td>
+                <div class="grp-buttons">
+                    <button type="button" class="btn btn-primary">Play</button>
+                    <button type="button" class="btn btn-secondary">View</button>
+                </div>
+            </td>
+        </tr>
+    `
 
-    const title = document.createElement("td")
-    title.textContent = data.title
-    const host = document.createElement("td")
-    host.textContent = data.host
-    const players = document.createElement("td")
-    players.textContent = data.players_count
-    players.colSpan = 2
-    const viewers = document.createElement("td")
-    viewers.textContent = data.viewers_count
-    viewers.colSpan = 3
-    const description = document.createElement("td")
-    description.textContent = data.description
-    const buttonGroup = document.createElement("div")
-    buttonGroup.className = "grp-buttons"
-
-    const playButton = document.createElement("button")
-    playButton.type = "button"
-    playButton.className = "btn btn-primary"
-    playButton.textContent = "Play"
-
-    const viewButton = document.createElement("button")
-    viewButton.type = "button"
-    viewButton.className = "btn btn-primary"
-    viewButton.textContent = "View"
-
-    buttonGroup.append(playButton, viewButton)
-    row.append(title, host, players, viewers, description, buttonGroup)
-    roomsList.appendChild(row)
+    roomsList.insertAdjacentHTML("beforeend", row)
 }
 
 closeIcon.addEventListener("mousedown", function () {
@@ -191,4 +172,10 @@ createRoomWrapper.addEventListener("mousedown", function () {
 
 roomOpponentInput.addEventListener("mousedown", function () {
     this.value = ""
+})
+
+roomForm.addEventListener("submit", function (event) {
+    if (roomTitle.value.length === 0) {
+        roomTitle.value = roomTitle.placeholder
+    }
 })
