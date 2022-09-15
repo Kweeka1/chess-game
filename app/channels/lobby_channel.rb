@@ -1,7 +1,6 @@
 class LobbyChannel < ApplicationCable::Channel
   require 'chess_in_mem_cache'
 
-  after_subscribe :send_subed_users
   after_unsubscribe :send_unsubed_user
 
   @@cache = ChessInMemCache.instance
@@ -12,14 +11,13 @@ class LobbyChannel < ApplicationCable::Channel
     user_unsub: "USER_UNSUBSCRIBED",
     create_room: "ROOM_CREATED",
     delete_room: "ROOM_DELETED",
-    current_rooms: "ACTIVE_ROOMS"
   }
 
   def subscribed
     stream_from "lobby_channel_global"
-    @@cache.add("#{current_user[:id]}:#{current_user[:user]}")
-    rooms = Room.all
-    ActionCable.server.broadcast "lobby_channel_global", {type: @@message_types[:current_rooms], data: rooms}
+    user = "#{current_user[:id]}:#{current_user[:user]}"
+    @@cache.add(user)
+    send_subed_user(user)
   end
   def unsubscribed
     @@cache.remove("#{current_user[:id]}:#{current_user[:user]}")
@@ -36,9 +34,8 @@ class LobbyChannel < ApplicationCable::Channel
 
   private
 
-  def send_subed_users
-    users = @@cache.all
-    ActionCable.server.broadcast 'lobby_channel_global', {type: @@message_types[:user_sub], users: users}
+  def send_subed_user(user)
+    ActionCable.server.broadcast 'lobby_channel_global', {type: @@message_types[:user_sub], user: user}
   end
 
   def send_unsubed_user
