@@ -7,33 +7,18 @@
   <%= form_with local: true, url: '/create-room', id: 'room-form', model: @room, method: :post do |form|  %>
     <div class="room__desc">
       <div class="detail">
-        <label for="room-title">Room Title</label>
+        <label for="room-title">Room Name</label>
         <%= form.text_field :room_name, autocomplete: 'off', class: "form-control", type: "text", id: "room-title", placeholder: "#{@username}'s room" %>
-        <% @room.errors.full_messages_for(:room_name).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
       </div>
       <div class="detail">
         <label for="room-privacy">Room Privacy</label>
         <%= form.select :room_privacy, options_for_select(@privacy_types, selected: 'public'), { include_blank: false }, { class: "form-select select_privacy"} %>
-        <% @room.errors.full_messages_for(:room_privacy).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
       </div>
     </div>
     <div class="room__desc">
       <div class="detail">
         <label for="room-opponent" class="form-label">Room Opponent</label>
         <%= form.text_field :room_opponent, autocomplete: 'off', required: true, type: "text", class: "form-control room_opponent", list: "online-players-options", id: "room-opponent", placeholder: "Choose opponent" %>
-        <% @room.errors.full_messages_for(:room_opponent).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
         <datalist class="players__datalist" id="online-players-options">
           <option id="wait">Free to join</option>
         </datalist>
@@ -41,21 +26,11 @@
       <div class="detail">
         <label for="room-password">Room Password</label>
         <%= form.text_field :room_password, type: "password", class: "form-control", list: "online-players-options", id: "room-password", placeholder: "Leave it empty for none" %>
-        <% @room.errors.full_messages_for(:room_password).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
       </div>
     </div>
     <div class="detail">
       <label for="room-description">Room Description</label>
       <%= form.text_area :room_description, maxlength: "105", class: "form-control", id: "room-description" %>
-      <% @room.errors.full_messages_for(:room_description).each do |msg| %>
-        <p class="text-danger pt-2">
-          <%= msg %>
-        </p>
-      <% end %>
     </div>
     <div class="last-row-container">
       <div class="detail">
@@ -64,11 +39,6 @@
                         options_for_select(@viewers_access_types, 'allow'),
                         { include_blank: false },
                         { class: "form-select select_privacy"} %>
-        <% @room.errors.full_messages_for(:room_allow_viewers).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
       </div>
       <div class="detail">
         <label for="room-allow-viewers">In Game Chat</label>
@@ -76,11 +46,6 @@
                         options_for_select(@chat_access_types, 'allow'),
                         { include_blank: false },
                         { class: "form-select select_privacy"} %>
-        <% @room.errors.full_messages_for(:room_only_players_chat).each do |msg| %>
-          <p class="text-danger pt-2">
-            <%= msg %>
-          </p>
-        <% end %>
       </div>
       <button class="btn btn-primary" type="submit">Create Room</button>
     </div>
