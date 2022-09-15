@@ -1,24 +1,22 @@
 import { createChessConsumer } from "channels/consumer"
 import {movePieceToNewPos} from "../chess";
+
 const chat = document.getElementById("chat-display")
 
-const serverTypes = {
-  rxMsg: "TEXT_MESSAGE_RECEIVED",
-  moveValidation: "MOVE_VALIDATION_RECEIVED",
+const types = {
+  textMessage: "TEXT_MESSAGE",
+  moveValidation: "MOVE_VALIDATION",
 }
 
 function displayMessage(message) {
-  const messageEl = document.createElement("p")
-  messageEl.textContent = message
-  chat.appendChild(messageEl)
+  const messageEl = `<p>${message}</p>`
+  chat.insertAdjacentHTML("beforeend", messageEl)
 }
 
 function moveValidationResult(data) {
   if (data.isValid) {
-    movePieceToNewPos(data.start, data.end, true)
-    return;
+    return movePieceToNewPos(data.start, data.end, true)
   }
-
   movePieceToNewPos(data.start, data.end, false)
 }
 
@@ -27,7 +25,7 @@ export function validateMoveSv(sourcePieceType, sourceEl, destinationEl) {
   const end = destinationEl.getAttribute("coordination")
 
   roomChannel.send({
-    message_type: "MOVE_VALIDATION",
+    type: types.moveValidation,
     data: {
       source_piece: sourcePieceType,
       source_str: start,
@@ -52,12 +50,10 @@ export const roomChannel = createChessConsumer.subscriptions.create({channel: "R
     // Called when there's incoming data on the websocket for this channel
     console.log(data)
     switch (data["message_type"]) {
-      case serverTypes.rxMsg:
-        displayMessage(data["data"])
-        break;
-      case serverTypes.moveValidation:
-        moveValidationResult(data["move"])
-        break;
+      case types.textMessage:
+        return displayMessage(data["data"])
+      case types.moveValidation:
+        return moveValidationResult(data["move"])
     }
   }
 });
