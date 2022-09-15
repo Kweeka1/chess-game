@@ -19,7 +19,7 @@ class ChessHelper
   private
 
   @types = {
-    msg: "TEXT_MESSAGE",
+    text_message: "TEXT_MESSAGE",
     command: "TEXT_COMMAND",
     piece_move: "MOVE_VALIDATION"
   }
