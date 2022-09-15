@@ -1,11 +1,12 @@
 <%= stylesheet_link_tag "lobby.styles", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "snackbar.styles.min", "data-turbo-track": "reload" %>
 
 <main class="main">
   <section class="main__header">
     <div class="header__left">
       <div class="current__stats">
         <h6>Active Games:</h6>
-        <span id="games-count" >24</span>
+        <span id="games-count" >Loading...</span>
       </div>
       <div class="current__stats">
         <h6>Online Users:</h6>
@@ -20,7 +21,9 @@
         <% end %>
       </div>
       <div class="room_buttons__container">
-        <button class="btn btn-primary">Load Game</button>
+        <% if @user_available %>
+          <button class="btn btn-primary">Load Game</button>
+        <% end %>
         <button id="create-room-button" class="btn btn-primary">Create Room</button>
       </div>
       <div class="theme_icon__container">
@@ -55,9 +58,7 @@
         <thead>
         <tr>
           <th style="width: 10rem;" scope="col"><h6>Room name</h6></th>
-          <th style="width: 8rem;" scope="col"><h6>Host</h6></th>
-          <th style="width: 6rem;" scope="col"><h6>Players</h6></th>
-          <th style="width: 6rem;" scope="col"><h6>Viewers</h6></th>
+          <th style="width: 10rem;" scope="col"><h6>Host</h6></th>
           <th scope="col"><h6>Description</h6></th>
         </tr>
         </thead>
@@ -94,5 +95,25 @@
       window.location.href = `/chess/${<%= @room_id %>>}`
   </script>
 <% end %>
+
 <%= javascript_importmap_tags %>
 <%= javascript_import_module_tag "channels/lobby_channel" %>
+<%= javascript_include_tag "Snackbar.min" %>
+
+<% if @room.errors.any? %>
+  <script defer>
+    let errors = []
+    <% @room.errors.each do |error| %>
+      errors.push("<%= error.full_message %>")
+    <% end %>
+    async function showErrors() {
+        for (const error of errors) {
+            Snackbar.show({pos: 'bottom-right', duration: 2000, text: error})
+            await new Promise((resolve) => setTimeout(() => {
+                resolve()
+            }, 2000))
+        }
+    }
+    showErrors()
+  </script>
+<% end %>
