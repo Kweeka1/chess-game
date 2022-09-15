@@ -6,30 +6,27 @@ class RoomsChannel < ApplicationCable::Channel
   @@turn = "Blue"
 
   @@types = {
-    msg: "TEXT_MESSAGE",
+    text_message: "TEXT_MESSAGE",
     command: "TEXT_COMMAND",
     piece_move: "MOVE_VALIDATION"
   }
   def subscribed
-    puts params
     @board = $cache.get_chess_board(params[:room])
     stream_from "rooms_#{params[:room]}"
   end
 
   def receive(data)
 
-    case data["message_type"]
-
-    when @@types[:msg]
-      then handle_text(data)
-    when @@types[:command]
-      then handle_command(data)
-    when @@types[:piece_move]
-      then handle_piece_move(data)
-    else
-      ActionCable.server.broadcast "rooms_channel", "Unknown message type"
+    case data["type"]
+      when @@types[:text_message]
+        then handle_text(data)
+      when @@types[:command]
+        then handle_command(data)
+      when @@types[:piece_move]
+        then handle_piece_move(data)
+      else
+        ActionCable.server.broadcast "rooms_channel", "Unknown message type"
     end
-
   end
 
   def unsubscribed
@@ -41,7 +38,7 @@ class RoomsChannel < ApplicationCable::Channel
 
   def handle_text(data)
     response = {
-      message_type: "TEXT_MESSAGE_RECEIVED",
+      type: "TEXT_MESSAGE",
       data: data["text"]
     }
 
@@ -49,7 +46,7 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def handle_command(data)
-    puts data["message_type"]
+    puts data["type"]
   end
 
   def handle_piece_move(message)
@@ -270,6 +267,4 @@ class RoomsChannel < ApplicationCable::Channel
           false
       end
     end
-
-
 end
