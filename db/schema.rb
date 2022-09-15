@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_075159) do
   create_table "rooms", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "room_id", null: false
     t.string "room_name", null: false
+    t.string "room_host", null: false
     t.string "room_description"
     t.string "room_password"
     t.string "room_opponent", null: false
