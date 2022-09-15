@@ -4,12 +4,12 @@ const input = document.getElementById("chat_input")
 const sendButton = document.getElementById("btn_send")
 
 const types = {
-    msg: "TEXT_MESSAGE",
+    textMessage: "TEXT_MESSAGE",
     command: "TEXT_COMMAND"
 }
 
 function checkType(text) {
-    return text.at(0) === "!" ? types.command : types.msg
+    return text.at(0) === "!" ? types.command : types.textMessage
 }
 
 function sendMessage() {
@@ -18,7 +18,7 @@ function sendMessage() {
 
     if (text.length !== 0) {
         roomChannel.send({
-            message_type: type,
+            type: type,
             text: text.trim()
         })
     }
