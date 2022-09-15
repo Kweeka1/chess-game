@@ -1,8 +1,12 @@
+import {requestToJoin, requestToView} from "./channels/user_channel";
+import {username} from "./channels/consumer";
+
 const table = document.getElementById("rooms-table")
 const sunIcon = document.getElementById("icon__sun")
 const moonIcon = document.getElementById("icon__moon")
 const userContainer = document.getElementById("users-container")
 const onlineUsers = document.getElementById("users-online")
+const activeGames = document.getElementById("games-count")
 const globalChat = document.getElementById("global-chat")
 const closeIcon = document.getElementById("create-room-close-icon")
 const openButton = document.getElementById("create-room-button")
@@ -13,6 +17,7 @@ const roomForm = document.getElementById("room-form")
 const roomTitle = document.getElementById("room-title")
 const playersDatalist = document.querySelector(".players__datalist")
 const roomOpponentInput = document.querySelector(".room_opponent")
+
 
 let currentPlayers = []
 function randomHsl() {
@@ -64,40 +69,17 @@ sunIcon.addEventListener('mousedown', function () {
 })
 
 moonIcon.addEventListener('mousedown', function () {
-    console.log("moon")
     document.documentElement.classList.add("light-mode")
     document.documentElement.classList.remove("dark-mode")
 })
 
-function generateRandomColor() {
-    let theme = localStorage.getItem("theme")
-    let color = '#';
-
-    if (theme === "light") {
-        for (let i = 0; i < 6; i++) {
-            color += Math.floor(Math.random() * 8);
-        }
-        return color;
-    }
-    const letters = '0123456789ABCDEF';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    console.log(color)
-    return color;
-}
-
-export function appendUsers(users) {
-    userContainer.innerHTML = ""
-
-    users.forEach(userString => {
-        const user = userString.split(":")
-        currentPlayers.push([user[0], user[1]])
-        const userEl = document.createElement("p")
-        userEl.className = user[1]
-        userEl.textContent = user[1]
-        userContainer.appendChild(userEl)
-    })
+export function appendUser(userStr) {
+    const user = userStr.split(":")
+    currentPlayers.push([user[0], user[1]])
+    const userEl = document.createElement("p")
+    userEl.className = user[1]
+    userEl.textContent = user[1]
+    userContainer.appendChild(userEl)
 
     onlineUsers.textContent = userContainer.children.length.toString()
 }
@@ -142,23 +124,35 @@ openButton.addEventListener("mousedown", function () {
 
 export function appendRoom(data) {
     const row = `
-        <tr>
-            <td>${data.room_name}</td>
-            <td>${data.room_opponent}</td>
-            <td colspan="2">${data.players_count}</td>
-            <td colspan="3">${data.viewers_count}</td>
+        <tr class="room_row">
+            <td style="width: 10rem;">${data.room_name}</td>
+            <td style="width: 10rem;">${data.room_host}</td>
             <td>${data.room_description}</td>
             <td>
+                <iframe style="width: 10px;height: 10px;border-radius: 1.625rem;background-color: red;border: 1px solid #464545"></iframe>
+            </td>
+            <td class="room-btn-container">
                 <div class="grp-buttons">
-                    <button type="button" class="btn btn-primary">Play</button>
-                    <button type="button" class="btn btn-secondary">View</button>
+                    <button id="${data.room_id}_play" type="button" class="btn btn-primary">Play</button>
+                    <button id="${data.room_id}_view" type="button" class="btn btn-secondary">View</button>
                 </div>
             </td>
         </tr>
     `
 
     roomsList.insertAdjacentHTML("beforeend", row)
+    activeGames.textContent = roomsList.children.length.toString()
 }
+
+roomsList.addEventListener("mousedown", function (ev) {
+    const element = ev.target
+    if (element.nodeName !== "BUTTON") return;
+
+    const host = element.parentElement.parentElement.parentElement.children.item(1).textContent
+    console.log(host)
+    if (element.id.includes("play")) return requestToJoin(username, host)
+    if (element.id.includes("view")) return requestToView(username, host)
+})
 
 closeIcon.addEventListener("mousedown", function () {
     createRoomWrapper.style.display = "none"
@@ -178,4 +172,9 @@ roomForm.addEventListener("submit", function (event) {
     if (roomTitle.value.length === 0) {
         roomTitle.value = roomTitle.placeholder
     }
+    if (roomOpponentInput.value === "Free to join") {
+        roomOpponentInput.value = ""
+    }
 })
+
+activeGames.textContent = "0"

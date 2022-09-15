@@ -322,9 +322,7 @@ th > h6 {
 
 .grp-buttons {
     display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 0 5px;
+    gap: 1rem;
 }
 
 
@@ -480,4 +478,8 @@ th > h6 {
     right: 0.75rem;
     font-size: 30px;
     cursor: pointer;
+}
+
+.room-btn-container {
+    width: 100px;
 }
