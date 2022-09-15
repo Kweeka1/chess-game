@@ -3,6 +3,7 @@ class CreateRooms < ActiveRecord::Migration[7.0]
     create_table :rooms do |t|
       t.string :room_id, null: false, index: { unique: true }
       t.string :room_name, null: false, index: { unique: true }
+      t.string :room_host, null: false
       t.string :room_description
       t.string :room_password
       t.string :room_opponent, null: false
