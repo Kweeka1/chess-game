@@ -6,6 +6,11 @@ class LobbyController < ApplicationController
     user_id = cookies['id']
     @username = cookies['username']
     @room = Room.new
+    registered = User.find_by user: @username
+
+    if registered
+      @user_available = true
+    end
 
     if !user_id
       id = SecureRandom.uuid
@@ -32,9 +37,11 @@ class LobbyController < ApplicationController
 
   def create_room
     @room = Room.new
+    @username = cookies['username']
 
     @room[:room_id] = create_room_params[:room_name].to_s.strip.gsub(/[^0-9a-z]/i, '_')
     @room[:room_name] = create_room_params[:room_name]
+    @room[:room_host] = @username
     @room[:room_description] = create_room_params[:room_description]
     @room[:room_password] = create_room_params[:room_password]
     @room[:room_opponent] = create_room_params[:room_opponent]
@@ -50,10 +57,6 @@ class LobbyController < ApplicationController
       @room_id = @room[:room_id]
       redirect_to "/chess/#{@room[:room_id]}"
     else
-      File.open("#{Dir.getwd}/log/logs.txt", mode = 'w') do |logs|
-        logs << "#{@room.errors.inspect}\n"
-      end
-      puts @room.errors.inspect
       render :'lobby/index', status: :unprocessable_entity
     end
 
