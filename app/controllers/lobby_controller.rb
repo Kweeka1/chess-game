@@ -5,43 +5,57 @@ class LobbyController < ApplicationController
   def index
     user_id = cookies['id']
     @username = cookies['username']
-    @room = Room.new
-    registered = User.find_by user: @username
+    registered = User.find_by user_id: user_id
 
     if registered
       @user_available = true
-    end
-
-    if !user_id
-      id = SecureRandom.uuid
-      @username = "Guest#{id[0...8].upcase}"
-
+      @room = Room.new
       cookies['username'] = {
-        value: @username,
+        value: registered[:user],
         expires: Time.now.next_year,
         httponly: true
       }
       cookies['id'] = {
-        value: id,
+        value: user_id,
         expires: Time.now.next_year,
         httponly: true
       }
 
-      File.open("#{Dir.getwd}/log/logs.txt", mode = 'w') do |logs|
-        logs << "[#{Time.now}]: Connection from #{@username} with IP address #{request.remote_ip} with Id #{id}"
-      end
+      render 'index'
+    elsif !user_id
+      id = SecureRandom.uuid
+      @username = "Guest#{id[0...8].upcase}"
+      @room = TemporaryRoom.new
+
+      cookies['username'] = {
+        value: @username,
+        expires: Time.now.next_day,
+        httponly: true
+      }
+      cookies['id'] = {
+        value: id,
+        expires: Time.now.next_day,
+        httponly: true
+      }
 
       render 'index'
     end
   end
 
   def create_room
-    @room = Room.new
     @username = cookies['username']
+    registered = User.find_by user: @username
+    puts registered.rooms.inspect
+
+    if registered
+      @room = registered.rooms.new
+    else
+      @room = TemporaryRoom.new
+      @room[:room_host] = @username
+    end
 
     @room[:room_id] = create_room_params[:room_name].to_s.strip.gsub(/[^0-9a-z]/i, '_')
     @room[:room_name] = create_room_params[:room_name]
-    @room[:room_host] = @username
     @room[:room_description] = create_room_params[:room_description]
     @room[:room_password] = create_room_params[:room_password]
     @room[:room_opponent] = create_room_params[:room_opponent]
@@ -67,7 +81,7 @@ class LobbyController < ApplicationController
     redis = ChessInMemCache.instance
     user_id = cookies['id']
     old_username = cookies['username']
-    user = User.find_by user_guid: user_id
+    user = User.find_by user_id: user_id
 
     if user
       user.user = username_params
@@ -75,7 +89,7 @@ class LobbyController < ApplicationController
     else
       user = User.new
       user.user = username_params
-      user.user_guid = user_id
+      user.user_id = user_id
       puts user.user
       user.save
     end
