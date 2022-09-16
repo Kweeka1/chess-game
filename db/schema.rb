@@ -10,8 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_10_075159) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_16_093216) do
   create_table "rooms", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "room_id", null: false
+    t.string "room_name", null: false
+    t.string "room_description"
+    t.string "room_password"
+    t.string "room_opponent", null: false
+    t.string "room_allow_viewers"
+    t.string "room_privacy"
+    t.string "room_only_players_chat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["room_id"], name: "index_rooms_on_room_id", unique: true
+    t.index ["room_name"], name: "index_rooms_on_room_name", unique: true
+    t.index ["user_id"], name: "index_rooms_on_user_id"
+  end
+
+  create_table "temporary_rooms", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "room_id", null: false
     t.string "room_name", null: false
     t.string "room_host", null: false
@@ -23,16 +40,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_075159) do
     t.string "room_only_players_chat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["room_id"], name: "index_rooms_on_room_id", unique: true
-    t.index ["room_name"], name: "index_rooms_on_room_name", unique: true
+    t.index ["room_id"], name: "index_temporary_rooms_on_room_id", unique: true
+    t.index ["room_name"], name: "index_temporary_rooms_on_room_name", unique: true
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "user_guid", null: false
+    t.string "user_id", null: false
     t.string "user", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user"], name: "index_users_on_user", unique: true
   end
 
+  add_foreign_key "rooms", "users"
 end
