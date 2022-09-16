@@ -21,11 +21,10 @@ const roomOpponentInput = document.querySelector(".room_opponent")
 
 let currentPlayers = []
 function randomHsl() {
-    return  'rgb(' +
-    (Math.floor(Math.random()*56)+120) + ', ' +
-    (Math.floor(Math.random()*56)+120) + ', ' +
-    (Math.floor(Math.random()*56)+120) +
-    ')';
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = Math.floor(Math.random() * (100 + 1)) + "%";
+    const lightness = Math.floor(Math.random() * (50 + 1)) + "%";
+    return "hsl(" + hue + ", " + saturation + ", " + lightness + ")";
 }
 const userColor = randomHsl()
 localStorage.setItem("userColor", userColor)
@@ -149,9 +148,10 @@ roomsList.addEventListener("mousedown", function (ev) {
     if (element.nodeName !== "BUTTON") return;
 
     const host = element.parentElement.parentElement.parentElement.children.item(1).textContent
-    console.log(host)
-    if (element.id.includes("play")) return requestToJoin(username, host)
-    if (element.id.includes("view")) return requestToView(username, host)
+    const roomName = element.parentElement.parentElement.parentElement.children.item(0).textContent
+
+    if (element.id.includes("play")) return requestToJoin(username, host, roomName)
+    if (element.id.includes("view")) return requestToView(username, host, roomName)
 })
 
 closeIcon.addEventListener("mousedown", function () {
