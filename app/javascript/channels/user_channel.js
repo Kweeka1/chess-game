@@ -10,18 +10,26 @@ const types = {
   viewRequest: "VIEW_REQUEST"
 }
 
-export function requestToJoin(guest, host) {
-  userChannel.send({
+export function requestToJoin(guest, host, room) {
+  return  userChannel.send({
     type: types.joinRequest,
     data: {
       guest: guest,
-      host: host
+      host: host,
+      room: room
     }
   })
 }
 
-export function requestToView() {
-  console.log("view")
+export function requestToView(guest, host, room) {
+  return  userChannel.send({
+    type: types.viewRequest,
+    data: {
+      guest: guest,
+      host: host,
+      room: room
+    }
+  })
 }
 
 export const userChannel = createUserConsumer.subscriptions.create({channel: "UserChannel", user: username}, {
@@ -41,9 +49,11 @@ export const userChannel = createUserConsumer.subscriptions.create({channel: "Us
       case types.currentUsers:
         return  response.data.forEach(user => appendUser(user))
       case types.joinRequest:
-        return
+        return Snackbar.show({pos: 'bottom-right',
+          duration: 5000, text: `${response.data.guest} requested to join room ${response.data.room}`})
       case types.viewRequest:
-        return
+        return Snackbar.show({pos: 'bottom-right',
+          duration: 5000, text: `${response.data.guest} requested to view room ${response.data.room}`})
     }
   }
 });
