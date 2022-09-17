@@ -38,7 +38,7 @@ class RoomsChannel < ApplicationCable::Channel
 
   def handle_text(data)
     response = {
-      type: "TEXT_MESSAGE",
+      type: @@types[:text_message],
       data: data["text"]
     }
 
@@ -55,7 +55,7 @@ class RoomsChannel < ApplicationCable::Channel
     is_valid_move = validate_move(move["source_piece"], move["source_str"], move["destination_str"])
 
     response = {
-      message_type: "MOVE_VALIDATION_RECEIVED",
+      message_type: @@types[:piece_move],
       move: {
         start: message["data"]["source_str"].split(':'),
         end: message["data"]["destination_str"].split(':'),
@@ -67,11 +67,11 @@ class RoomsChannel < ApplicationCable::Channel
   end
 
   def move_piece(source_row, source_col, destination_row, destination_col)
-    @board[destination_row][destination_col][:piece] = @board[source_row][source_col][:piece]
-    @board[destination_row][destination_col][:team] = @board[source_row][source_col][:team]
+    @board[destination_row][destination_col][0] = @board[source_row][source_col][0]
+    @board[destination_row][destination_col][1] = @board[source_row][source_col][1]
 
-    @board[source_row][source_col][:piece] = ''
-    @board[source_row][source_col][:team] = ''
+    @board[source_row][source_col][0] = ''
+    @board[source_row][source_col][1] = ''
     true
   end
 
@@ -100,13 +100,13 @@ class RoomsChannel < ApplicationCable::Channel
         if destination_col > source_col
           col += 1
           reached_end = col == destination_col
-          if @board[row][col][:team] != ""
+          if @board[row][col][1] != ""
             break
           end
         else
           col -= 1
           reached_end = col == destination_col
-          if @board[row][col][:team] != ""
+          if @board[row][col][1] != ""
             break
           end
         end
@@ -116,13 +116,13 @@ class RoomsChannel < ApplicationCable::Channel
         if destination_col > source_col
           col += 1
           reached_end = col == destination_col
-          if @board[row][col][:team] != ""
+          if @board[row][col][1] != ""
             break
           end
         else
           col -= 1
           reached_end = col == destination_col
-          if @board[row][col][:team] != ""
+          if @board[row][col][1] != ""
             break
           end
         end
@@ -135,7 +135,7 @@ class RoomsChannel < ApplicationCable::Channel
   def validate_rock_move(source_row, source_col, destination_row, destination_col)
 
     reached_end = false
-    dest_territory_team = @board[destination_row][destination_col][:team]
+    dest_territory_team = @board[destination_row][destination_col][1]
     not_ally_territory = dest_territory_team != @@turn
 
     if source_row == destination_row
@@ -143,7 +143,7 @@ class RoomsChannel < ApplicationCable::Channel
 
         (source_col - 1).downto(destination_col) do |col|
           reached_end = col == destination_col
-          if @board[source_row][col][:team] != ''
+          if @board[source_row][col][1] != ''
             break
           end
         end
@@ -152,7 +152,7 @@ class RoomsChannel < ApplicationCable::Channel
       else
         (source_col + 1).upto(destination_col) do |col|
           reached_end = col == destination_col
-          if @board[source_row][col][:team] != ''
+          if @board[source_row][col][1] != ''
             break
           end
         end
@@ -166,7 +166,7 @@ class RoomsChannel < ApplicationCable::Channel
 
         (source_row - 1).downto(destination_row) do |row|
           reached_end = row == destination_row
-          if @board[row][source_col][:team] != ''
+          if @board[row][source_col][1] != ''
             break
           end
         end
@@ -175,7 +175,7 @@ class RoomsChannel < ApplicationCable::Channel
       else
         (source_row + 1).upto(destination_row) do |row|
           reached_end = row == destination_row
-          if @board[row][source_col][:team] != ''
+          if @board[row][source_col][1] != ''
             break
           end
         end
@@ -201,7 +201,7 @@ class RoomsChannel < ApplicationCable::Channel
     row_move = (source_row - destination_row).abs
     col_move = (source_col - destination_col).abs
 
-    destination_team = @board[destination_row][destination_col][:team]
+    destination_team = @board[destination_row][destination_col][1]
 
     if @@turn == "Blue"
       if destination_row < source_row

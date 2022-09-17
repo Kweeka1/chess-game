@@ -6,4 +6,6 @@ class TemporaryRoom < ApplicationRecord
   validates :room_allow_viewers, inclusion: {in: %w(allow permission no)}
   validates :room_only_players_chat, inclusion: {in: %w(players all)}
   validates :room_privacy, inclusion: {in: %w(public private)}
+
+  has_one :chess_board, dependent: :destroy
 end

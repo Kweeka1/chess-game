@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_16_093216) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_17_080544) do
+  create_table "chess_boards", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "row_1"
+    t.string "row_2"
+    t.string "row_3"
+    t.string "row_4"
+    t.string "row_5"
+    t.string "row_6"
+    t.string "row_7"
+    t.string "row_8"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "room_id"
+    t.bigint "temporary_room_id"
+    t.index ["room_id"], name: "index_chess_boards_on_room_id"
+    t.index ["temporary_room_id"], name: "index_chess_boards_on_temporary_room_id"
+  end
+
   create_table "rooms", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "room_id", null: false
     t.string "room_name", null: false
@@ -52,5 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_16_093216) do
     t.index ["user"], name: "index_users_on_user", unique: true
   end
 
+  add_foreign_key "chess_boards", "rooms"
+  add_foreign_key "chess_boards", "temporary_rooms"
   add_foreign_key "rooms", "users"
 end

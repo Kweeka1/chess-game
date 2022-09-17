@@ -1,38 +1,24 @@
 class Chess
 
-  Blue_Backline = [{ "piece": 'Rock_black', team: 'Blue' },
-                   { "piece": 'Knight_black', team: 'Blue' },
-                   { "piece": 'Bishop_black', team: 'Blue' },
-                   { "piece": 'King_black', team: 'Blue' },
-                   { "piece": 'Queen_black', team: 'Blue' },
-                   { "piece": 'Bishop_black', team: 'Blue' },
-                   { "piece": 'Knight_black', team: 'Blue' },
-                   { "piece": 'Rock_black', team: 'Blue' }]
+  Blue_Backline = %w[Rock_black-Blue Knight_black-Blue Bishop_black-Blue King_black-Blue Queen_black-Blue Bishop_black-Blue Knight_black-Blue Rock_black-Blue]
 
-  Red_Backline = [{ "piece": 'Rock_white', team: 'Red' },
-                   { "piece": 'Knight_white', team: 'Red' },
-                   { "piece": 'Bishop_white', team: 'Red' },
-                   { "piece": 'King_white', team: 'Red' },
-                   { "piece": 'Queen_white', team: 'Red' },
-                   { "piece": 'Bishop_white', team: 'Red' },
-                   { "piece": 'Knight_white', team: 'Red' },
-                   { "piece": 'Rock_white', team: 'Red' }]
+  Red_Backline = %w[Rock_white-Red Knight_white-Red Bishop_white-Red King_white-Red Queen_white-Red Bishop_white-Red Knight_white-Red Rock_white-Red]
 
   def initialize
     @board = Array.new(8) do |row|
       Array.new(8) do |col|
         if row == 0
-          Blue_Backline[col][:id] = "#{row}:#{col}"
+          Blue_Backline[col] = Blue_Backline[col] + "-#{row}:#{col}"
           Blue_Backline[col]
         elsif row == 1
-          { "piece": 'Pawn_black', team: 'Blue', id: "#{row}:#{col}" }
+          "Pawn_black-Blue-#{row}:#{col}"
         elsif row == 6
-          { "piece": 'Pawn_white', team: 'Red', id: "#{row}:#{col}" }
+          "Pawn_white-Red-#{row}:#{col}"
         elsif row == 7
-          Red_Backline[col][:id] = "#{row}:#{col}"
+          Red_Backline[col] = Red_Backline[col] + "-#{row}:#{col}"
           Red_Backline[col]
         else
-          {piece: '', team: '', id: "#{row}:#{col}" }
+          "--#{row}:#{col}"
         end
       end
     end

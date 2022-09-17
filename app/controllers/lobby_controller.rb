@@ -45,16 +45,16 @@ class LobbyController < ApplicationController
   def create_room
     @username = cookies['username']
     registered = User.find_by user: @username
-    puts registered.rooms.inspect
 
     if registered
       @room = registered.rooms.new
+      @room[:room_id] = create_room_params[:room_name].strip.gsub(/[^0-9a-z]/i, '_')
     else
       @room = TemporaryRoom.new
       @room[:room_host] = @username
+      @room[:room_id] = "temp_#{create_room_params[:room_name].strip.gsub(/[^0-9a-z]/i, '_')}"
     end
 
-    @room[:room_id] = create_room_params[:room_name].to_s.strip.gsub(/[^0-9a-z]/i, '_')
     @room[:room_name] = create_room_params[:room_name]
     @room[:room_description] = create_room_params[:room_description]
     @room[:room_password] = create_room_params[:room_password]
@@ -63,18 +63,20 @@ class LobbyController < ApplicationController
     @room[:room_privacy] = create_room_params[:room_privacy]
     @room[:room_only_players_chat] = create_room_params[:room_only_players_chat]
 
-    if @room.save
-      cache = ChessInMemCache.instance
-      @board = Chess.new.get_board
-      cache.store_chess_board(@room[:room_id], @board)
+    board = Chess.new.get_board
+    chess_board = ChessBoard.new
 
-      @room_id = @room[:room_id]
+    (0...8).each { |index|
+      chess_board["row_#{index + 1}"] = board[index].join(',')
+    }
+
+    @room.chess_board = chess_board
+
+    if @room.save
       redirect_to "/chess/#{@room[:room_id]}"
     else
       render :'lobby/index', status: :unprocessable_entity
     end
-
-
   end
 
   def change_username

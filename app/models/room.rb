@@ -8,4 +8,5 @@ class Room < ApplicationRecord
   validates :room_privacy, inclusion: {in: %w(public private)}
 
   belongs_to :user
+  has_one :chess_board, dependent: :destroy
 end

@@ -2,28 +2,55 @@
 <%= javascript_importmap_tags %>
 <%= javascript_import_module_tag "chess_chat" %>
 
+<section class="main__header">
+  <div class="header__left">
+    <div class="current__stats">
+      <h6>Active Games:</h6>
+      <span id="games-count" >Loading...</span>
+    </div>
+    <div class="current__stats">
+      <h6>Online Users:</h6>
+      <span id="users-online">Loading...</span>
+    </div>
+  </div>
+  <div class="header__right">
+    <div data-turbo="false" class="user__form__container">
+      <input type="text" class="form-control" id="username" value="<%= @username %>" disabled >
+    </div>
+    <div class="room_buttons__container">
+      <% if @user_available %>
+        <button class="btn btn-primary">Load Game</button>
+      <% end %>
+      <button id="create-room-button" class="btn btn-primary">Create Room</button>
+    </div>
+    <div class="theme_icon__container">
+      <%= image_tag 'sun', width: '30px', id: 'icon__sun' %>
+      <%= image_tag 'moon', width: '30px', id: 'icon__moon' %>
+    </div>
+  </div>
+</section>
 <div class="chess">
   <div id="board_container">
     <% @board.each_with_index do |row, row_index| %>
       <div id="chess_row" class="">
         <% if (row_index % 2) == 0 %>
           <% row.each_with_index do |col, col_index| %>
-            <% if col[:piece].length != 0 %>
-              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[:piece].split("_")[0] %>" team="<%= col[:team] %>" class="cube_even cube">
-                <%= image_tag "#{col[:piece]}.png", width: '50px', alt: "#{col[:piece]}" %>
+            <% if col[0].length != 0 %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[0].split("_")[0] %>" team="<%= col[1] %>" class="cube_even cube">
+                <%= image_tag "#{col[0]}.png", width: '50px', alt: "#{col[0]}" %>
               </div>
             <% else %>
-              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_even cube"><%= col[:piece] %></div>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_even cube"><%= col[0] %></div>
             <% end %>
           <% end %>
         <% else %>
           <% row.each_with_index do |col, col_index| %>
-            <% if col[:piece].length != 0 %>
-              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[:piece].split("_")[0] %>" team="<%= col[:team] %>" class="cube_odd cube">
-                <%= image_tag "#{col[:piece]}.png", width: '50px', alt: "#{col[:piece]}" %>
+            <% if col[0].length != 0 %>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="<%= col[0].split("_")[0] %>" team="<%= col[1] %>" class="cube_odd cube">
+                <%= image_tag "#{col[0]}.png", width: '50px', alt: "#{col[0]}" %>
               </div>
             <% else %>
-              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_odd cube"><%= col[:piece] %></div>
+              <div coordination="<%= row_index %>:<%= col_index %>" piece="" team="" class="cube_odd cube"><%= col[0] %></div>
             <% end %>
           <% end %>
         <% end %>
