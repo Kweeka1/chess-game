@@ -21,7 +21,7 @@ class LobbyController < ApplicationController
         httponly: true
       }
 
-      render 'index'
+      return render 'index'
     elsif !user_id
       id = SecureRandom.uuid
       @username = "Guest#{id[0...8].upcase}"
@@ -38,8 +38,10 @@ class LobbyController < ApplicationController
         httponly: true
       }
 
-      render 'index'
+      return render 'index'
     end
+
+    @room = TemporaryRoom.new
   end
 
   def create_room
